@@ -1,5 +1,5 @@
-[![GoDoc](https://godoc.org/github.com/didip/go-bootstrap?status.svg)](http://godoc.org/github.com/didip/go-bootstrap)
-[![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/didip/go-bootstrap/master/LICENSE.md)
+[![GoDoc](https://godoc.org/github.com/go-bootstrap/go-bootstrap?status.svg)](http://godoc.org/github.com/go-bootstrap/go-bootstrap)
+[![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/go-bootstrap/go-bootstrap/master/LICENSE.md)
 
 ## go-bootstrap
 
@@ -10,7 +10,7 @@ Feel free to use or rip-out any of its parts.
 
 ## Installation
 
-1. `git clone git@github.com:didip/go-bootstrap.git`
+1. `git clone git@github.com:go-bootstrap/go-bootstrap.git`
 
 2. `go run main.go -dir github.com/{git-user}/{project-name}`
 
