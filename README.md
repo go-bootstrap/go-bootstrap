@@ -29,18 +29,20 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 3. Bootstrap Flatly is chosen for the UI theme.
 
-4. Static directory is located under `/static`.
+4. Session is stored inside encrypted cookie.
 
-5. Model directory is located under `/dal` (Database Access Layer).
+5. Static directory is located under `/static`.
 
-6. It does not use ORM nor installs one.
+6. Model directory is located under `/dal` (Database Access Layer).
 
-7. Test database is automatically created under `$GO_BOOTSTRAP_REPO_NAME-test`.
+7. It does not use ORM nor installs one.
 
-8. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
+8. Test database is automatically created under `$GO_BOOTSTRAP_REPO_NAME-test`.
 
-9. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
+9. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
 
-10. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+10. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
 
-11. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
+11. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+
+12. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
