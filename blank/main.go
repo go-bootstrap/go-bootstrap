@@ -13,12 +13,9 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/mattes/migrate/migrate"
 	"github.com/Sirupsen/logrus"
 	"github.com/stretchr/graceful"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -88,30 +85,10 @@ func (rm *Application) mux() *gorilla_mux.Router {
 	return router
 }
 
-func (rm *Application) migrateUp() (err []error, ok bool) {
-	return migrate.UpSync(rm.dsn, "./migrations")
-}
-
 func main() {
 	app, err := NewApplication()
 	if err != nil {
 		logrus.Fatal(err.Error())
-	}
-
-	// Migrate up
-	autoMigrateString := libenv.EnvWithDefault("AUTO_MIGRATE", "false")
-	autoMigrate, err := strconv.ParseBool(autoMigrateString)
-	if err != nil {
-		autoMigrate = false
-	}
-	if autoMigrate {
-		errs, ok := app.migrateUp()
-		if !ok {
-			for _, err := range errs {
-				logrus.Error(err.Error())
-			}
-			os.Exit(1)
-		}
 	}
 
 	middle, err := app.middlewareStruct()
