@@ -99,9 +99,9 @@ func main() {
 	for _, name := range []string{repoName, repoName + "-test"} {
 		pgDSN := fmt.Sprintf("postgres://%v@localhost:5432/%v?sslmode=disable", u.Username, name)
 
-		log.Println("Running migrations on: " + pgDSN)
+		log.Print("Running migrations on: " + pgDSN)
 		migrationOutput, _ := exec.Command("migrate", "-url", pgDSN, "-path", filepath.Join(fullpath, "migrations"), "up").CombinedOutput()
-		log.Println(string(migrationOutput))
+		log.Print(string(migrationOutput))
 	}
 
 	// 6. Get all application dependencies.
@@ -111,4 +111,9 @@ func main() {
 		log.Fatal(string(output))
 	}
 
+	// 7. Run tests on newly generated app.
+	cmd = exec.Command("go", "test", "./...")
+	cmd.Dir = fullpath
+	output, _ := cmd.CombinedOutput()
+	log.Print(string(output))
 }
