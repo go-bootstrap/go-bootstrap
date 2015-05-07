@@ -16,12 +16,9 @@
 
 5. Run the PostgreSQL migration.
     ```
-    # The automatic way: skip this part because migrate up is automatically run when server is up.
-
-    # The CLI way
     go get github.com/mattes/migrate
     cd $GOPATH/src/github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME
-    migrate -url postgres://$(whoami)@$localhost:$PG_PORT/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable -path ./migrations up
+    migrate -url postgres://$(whoami)@$localhost:5432/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable -path ./migrations up
     ```
 
 6. Run the server
@@ -41,7 +38,5 @@
 * **HTTP_DRAIN_INTERVAL:** How long application will wait to drain old requests before restarting. Default: `"1s"`
 
 * **DSN:** RDBMS database path. Default: `postgres://$(whoami)@localhost:5432/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable`
-
-* **AUTO_MIGRATE:** Auto migrate up when application is started. Default: `false`
 
 * **COOKIE_SECRET:** Cookie secret for session. Default: See the source code.
