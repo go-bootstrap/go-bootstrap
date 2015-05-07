@@ -98,12 +98,29 @@ func main() {
 	}
 
 	// 5.b. Run migrations on localhost:5432.
-	u, _ := user.Current()
+
+	// Start by determining configuration values.
+	pguser, pghost, pgport := os.Getenv("PGUSER"), os.Getenv("PGHOST"), os.Getenv("PGPORT")
+
+	if pguser == "" {
+		u, _ := user.Current() // Postgres' default username is the OS user's username, so try that.
+		pguser = u.Username
+	}
+
+	if pghost == "" {
+		pghost = "localhost"
+	}
+
+	if pgport == "" {
+		pgport = "5432"
+	}
+
 	for _, name := range []string{repoName, repoName + "-test"} {
-		pgDSN := fmt.Sprintf("postgres://%v@localhost:5432/%v?sslmode=disable", u.Username, name)
+		pgDSN := fmt.Sprintf("postgres://%v@%v:%v/%v?sslmode=disable", pguser, pghost, pgport, name)
 
 		log.Print("Running database migrations on " + pgDSN + "...")
 		if output, err := exec.Command("migrate", "-url", pgDSN, "-path", filepath.Join(fullpath, "migrations"), "up").CombinedOutput(); err != nil {
+			log.Fatal(err)
 			log.Fatal(string(output))
 		}
 	}
