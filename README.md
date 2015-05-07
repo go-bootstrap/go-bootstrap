@@ -10,7 +10,7 @@ Feel free to use or rip-out any of its parts.
 
 ## Installation
 
-1. `mkdir -p $GOPATH/src/github.com/go-bootstrap && cd $GOPATH/src/github.com/go-bootstrap`
+1. `mkdir -p $GOPATH/src/github.com && cd $GOPATH/src/github.com`
 
 2. `git clone git@github.com:go-bootstrap/go-bootstrap.git`
 
