@@ -10,9 +10,9 @@ Feel free to use or rip-out any of its parts.
 
 ## Installation
 
-1. `mkdir -p $GOPATH/src/github.com && cd $GOPATH/src/github.com`
+1. `go get github.com/go-bootstrap/go-bootstrap`
 
-2. `git clone git@github.com:go-bootstrap/go-bootstrap.git`
+2. `cd $GOPATH/src/github.com/go-bootstrap/go-bootstrap`
 
 3. `go run main.go -dir github.com/{git-user}/{project-name}`
 
