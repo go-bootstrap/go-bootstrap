@@ -39,10 +39,12 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 8. Test database is automatically created under `$GO_BOOTSTRAP_REPO_NAME-test`.
 
-9. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
+9. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
 
-10. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
+10. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
 
-11. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+11. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
 
-12. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
+12. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+
+13. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
