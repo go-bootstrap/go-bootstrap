@@ -29,7 +29,7 @@ func recursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 		fileInfo, _ := os.Stat(fileOrDir)
 		if !fileInfo.IsDir() {
 			for oldString, newString := range replacers {
-				log.Print("Rewriting " + oldString + " -> '" + newString + "' on " + fileOrDir)
+				log.Print("Replacing " + oldString + " -> '" + newString + "' on " + fileOrDir)
 
 				contentBytes, _ := ioutil.ReadFile(fileOrDir)
 				newContentBytes := bytes.Replace(contentBytes, []byte(oldString), []byte(newString), -1)
@@ -38,7 +38,6 @@ func recursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 				if err != nil {
 					return err
 				}
-				log.Print("Rewrote: " + fileOrDir)
 			}
 		}
 	}
@@ -61,19 +60,20 @@ func main() {
 	fullpath := os.ExpandEnv(filepath.Join("$GOPATH", "src", *dir))
 
 	// 1. Create target directory
+	log.Print("Creating " + fullpath + "...")
 	err := os.MkdirAll(fullpath, 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Print("Dir: " + fullpath + " is created")
 
 	// 2. Copy everything under blank directory to target directory.
+	log.Print("Copying a blank project to " + fullpath + "...")
 	if output, err := exec.Command("cp", "-rf", "./blank/", fullpath).CombinedOutput(); err != nil {
 		log.Fatal(output)
 	}
-	log.Print("Blank project is copied to: " + fullpath)
 
-	// 3. Interpolate all environment variables onto the blank project.
+	// 3. Interpolate placeholder variables on the new project.
+	log.Print("Replacing placeholder variables to " + repoUser + "/" + repoName + "...")
 	replacers := make(map[string]string)
 	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_REPO_NAME"] = repoName
@@ -82,14 +82,18 @@ func main() {
 	}
 
 	// 4. Create PostgreSQL databases.
+	log.Print("Creating a database named " + repoName + "...")
 	if exec.Command("createdb", repoName).Run() != nil {
 		log.Print("Unable to create PostgreSQL database: " + repoName)
 	}
+
+	log.Print("Creating a database named " + repoName + "-test" + "...")
 	if exec.Command("createdb", repoName+"-test").Run() != nil {
 		log.Print("Unable to create PostgreSQL database: " + repoName + "-test")
 	}
 
 	// 5.a. go get github.com/mattes/migrate.
+	log.Print("Installing github.com/mattes/migrate...")
 	if output, err := exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput(); err != nil {
 		log.Fatal(string(output))
 	}
@@ -99,12 +103,14 @@ func main() {
 	for _, name := range []string{repoName, repoName + "-test"} {
 		pgDSN := fmt.Sprintf("postgres://%v@localhost:5432/%v?sslmode=disable", u.Username, name)
 
-		log.Print("Running migrations on: " + pgDSN)
-		migrationOutput, _ := exec.Command("migrate", "-url", pgDSN, "-path", filepath.Join(fullpath, "migrations"), "up").CombinedOutput()
-		log.Print(string(migrationOutput))
+		log.Print("Running database migrations on " + pgDSN + "...")
+		if output, err := exec.Command("migrate", "-url", pgDSN, "-path", filepath.Join(fullpath, "migrations"), "up").CombinedOutput(); err != nil {
+			log.Fatal(string(output))
+		}
 	}
 
 	// 6. Get all application dependencies.
+	log.Print("Running go get ./...")
 	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	if output, err := cmd.CombinedOutput(); err != nil {
@@ -112,6 +118,7 @@ func main() {
 	}
 
 	// 7. Run tests on newly generated app.
+	log.Print("Running go test ./...")
 	cmd = exec.Command("go", "test", "./...")
 	cmd.Dir = fullpath
 	output, _ := cmd.CombinedOutput()
