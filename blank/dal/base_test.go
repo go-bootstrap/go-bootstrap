@@ -2,7 +2,7 @@ package dal
 
 import (
 	"fmt"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/libunix"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libunix"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/satori/go.uuid"
@@ -19,7 +19,7 @@ func newDbForTest(t *testing.T) *sqlx.DB {
 		t.Fatalf("Getting current user should never fail. Error: %v", err)
 	}
 
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_REPO_NAME-test?sslmode=disable", u))
+	db, err := sqlx.Connect("postgres", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME-test?sslmode=disable", u))
 	if err != nil {
 		t.Fatalf("Connecting to local postgres should never fail. Error: %v", err)
 	}

@@ -6,24 +6,24 @@
 
 3. Create PostgreSQL database.
     ```
-    createdb $GO_BOOTSTRAP_REPO_NAME
+    createdb $GO_BOOTSTRAP_PROJECT_NAME
     ```
 
 4. Get the source code.
     ```
-    go get github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME
+    go get $GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
     ```
 
 5. Run the PostgreSQL migration.
     ```
     go get github.com/mattes/migrate
-    cd $GOPATH/src/github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME
-    migrate -url postgres://$(whoami)@$localhost:5432/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable -path ./migrations up
+    cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
+    migrate -url postgres://$(whoami)@$localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable -path ./migrations up
     ```
 
 6. Run the server
     ```
-    cd $GOPATH/src/github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME
+    cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
     go run main.go
     ```
 
@@ -37,6 +37,6 @@
 
 * **HTTP_DRAIN_INTERVAL:** How long application will wait to drain old requests before restarting. Default: `"1s"`
 
-* **DSN:** RDBMS database path. Default: `postgres://$(whoami)@localhost:5432/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable`
+* **DSN:** RDBMS database path. Default: `postgres://$(whoami)@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable`
 
 * **COOKIE_SECRET:** Cookie secret for session. Default: See the source code.

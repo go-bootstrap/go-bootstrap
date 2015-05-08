@@ -37,7 +37,7 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 7. It does not use ORM nor installs one.
 
-8. Test database is automatically created under `$GO_BOOTSTRAP_REPO_NAME-test`.
+8. Test database is automatically created under `$GO_BOOTSTRAP_PROJECT_NAME-test`.
 
 9. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
 

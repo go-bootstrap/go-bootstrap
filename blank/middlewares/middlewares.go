@@ -32,7 +32,7 @@ func SetCookieStore(cookieStore *sessions.CookieStore) func(http.Handler) http.H
 func MustLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		cookieStore := context.Get(req, "cookieStore").(*sessions.CookieStore)
-		session, _ := cookieStore.Get(req, "$GO_BOOTSTRAP_REPO_NAME-session")
+		session, _ := cookieStore.Get(req, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 		userRowInterface := session.Values["user"]
 
 		if userRowInterface == nil {

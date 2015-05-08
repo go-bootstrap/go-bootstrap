@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/dal"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/handlers"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/libenv"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/libunix"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/middlewares"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/dal"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/handlers"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libenv"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libunix"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/middlewares"
 	"github.com/carbocation/interpose"
 	gorilla_mux "github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -30,7 +30,7 @@ func NewApplication() (*Application, error) {
 		return nil, err
 	}
 
-	dsn := libenv.EnvWithDefault("DSN", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_REPO_NAME?sslmode=disable", u))
+	dsn := libenv.EnvWithDefault("DSN", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable", u))
 
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {

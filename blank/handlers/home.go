@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/dal"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/libhttp"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/dal"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libhttp"
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"html/template"
@@ -14,7 +14,7 @@ func GetHome(w http.ResponseWriter, r *http.Request) {
 
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	currentUser, ok := session.Values["user"].(*dal.UserRow)
 	if !ok {
 		http.Redirect(w, r, "/logout", 301)

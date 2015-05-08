@@ -2,11 +2,9 @@
 package main
 
 import (
-	"bytes"
-	"crypto/rand"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"github.com/go-bootstrap/go-bootstrap/helpers"
 	"log"
 	"os"
 	"os/exec"
@@ -14,49 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 )
-
-func randString(n int) string {
-	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
-
-	var randBytes = make([]byte, n)
-	rand.Read(randBytes)
-
-	for i, b := range randBytes {
-		randBytes[i] = letters[b%byte(len(letters))]
-	}
-
-	return string(randBytes)
-}
-
-func recursiveSearchReplaceFiles(fullpath string, replacers map[string]string) error {
-	fileOrDirList := []string{}
-	err := filepath.Walk(fullpath, func(path string, f os.FileInfo, err error) error {
-		fileOrDirList = append(fileOrDirList, path)
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	for _, fileOrDir := range fileOrDirList {
-		fileInfo, _ := os.Stat(fileOrDir)
-		if !fileInfo.IsDir() {
-			for oldString, newString := range replacers {
-				log.Print("Replacing " + oldString + " -> '" + newString + "' on " + fileOrDir)
-
-				contentBytes, _ := ioutil.ReadFile(fileOrDir)
-				newContentBytes := bytes.Replace(contentBytes, []byte(oldString), []byte(newString), -1)
-
-				err := ioutil.WriteFile(fileOrDir, newContentBytes, fileInfo.Mode())
-				if err != nil {
-					return err
-				}
-			}
-		}
-	}
-	return nil
-}
 
 func main() {
 	dir := flag.String("dir", "", "directory of project relative to $GOPATH/src/")
@@ -66,11 +21,13 @@ func main() {
 		log.Fatal("dir option is missing.")
 	}
 
-	dirChunks := strings.Split(*dir, "/")
-	repoName := dirChunks[len(dirChunks)-1]
-	repoUser := dirChunks[len(dirChunks)-2]
-
 	fullpath := os.ExpandEnv(filepath.Join("$GOPATH", "src", *dir))
+	dirChunks := strings.Split(*dir, "/")
+	repoName := dirChunks[len(dirChunks)-3]
+	repoUser := dirChunks[len(dirChunks)-2]
+	projectName := dirChunks[len(dirChunks)-1]
+	dbName := projectName
+	testDbName := projectName + "-test"
 
 	// 1. Create target directory
 	log.Print("Creating " + fullpath + "...")
@@ -86,24 +43,22 @@ func main() {
 	}
 
 	// 3. Interpolate placeholder variables on the new project.
-	log.Print("Replacing placeholder variables to " + repoUser + "/" + repoName + "...")
+	log.Print("Replacing placeholder variables to " + repoUser + "/" + projectName + "...")
 	replacers := make(map[string]string)
-	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_REPO_NAME"] = repoName
-	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = randString(16)
-	if err := recursiveSearchReplaceFiles(fullpath, replacers); err != nil {
+	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
+	replacers["$GO_BOOTSTRAP_PROJECT_NAME"] = projectName
+	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
+	if err := helpers.RecursiveSearchReplaceFiles(fullpath, replacers); err != nil {
 		log.Fatal(err)
 	}
 
 	// 4. Create PostgreSQL databases.
-	log.Print("Creating a database named " + repoName + "...")
-	if exec.Command("createdb", repoName).Run() != nil {
-		log.Print("Unable to create PostgreSQL database: " + repoName)
-	}
-
-	log.Print("Creating a database named " + repoName + "-test" + "...")
-	if exec.Command("createdb", repoName+"-test").Run() != nil {
-		log.Print("Unable to create PostgreSQL database: " + repoName + "-test")
+	for _, name := range []string{dbName, testDbName} {
+		log.Print("Creating a database named " + name + "...")
+		if exec.Command("createdb", name).Run() != nil {
+			log.Print("Unable to create PostgreSQL database: " + name)
+		}
 	}
 
 	// 5.a. go get github.com/mattes/migrate.
@@ -114,7 +69,7 @@ func main() {
 
 	// 5.b. Run migrations on localhost:5432.
 	u, _ := user.Current()
-	for _, name := range []string{repoName, repoName + "-test"} {
+	for _, name := range []string{dbName, testDbName} {
 		pgDSN := fmt.Sprintf("postgres://%v@localhost:5432/%v?sslmode=disable", u.Username, name)
 
 		log.Print("Running database migrations on " + pgDSN + "...")

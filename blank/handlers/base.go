@@ -3,7 +3,7 @@ package handlers
 
 import (
 	"errors"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/dal"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/dal"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -13,7 +13,7 @@ import (
 
 func getCurrentUser(w http.ResponseWriter, r *http.Request) *dal.UserRow {
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	return session.Values["user"].(*dal.UserRow)
 }
 

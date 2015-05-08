@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"errors"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/dal"
-	"github.com/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_REPO_NAME/libhttp"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/dal"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libhttp"
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
@@ -61,7 +61,7 @@ func GetLogin(w http.ResponseWriter, r *http.Request) {
 
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
 	currentUserInterface := session.Values["user"]
 	if currentUserInterface != nil {
@@ -90,7 +90,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	session.Values["user"] = user
 
 	err = session.Save(r, w)
@@ -107,7 +107,7 @@ func GetLogout(w http.ResponseWriter, r *http.Request) {
 
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
 	delete(session.Values, "user")
 	session.Save(r, w)
@@ -137,7 +137,7 @@ func PutUsersID(w http.ResponseWriter, r *http.Request) {
 
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_REPO_NAME-session")
+	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
 	currentUser := session.Values["user"].(*dal.UserRow)
 
