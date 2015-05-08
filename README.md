@@ -39,12 +39,16 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 8. Test database is automatically created under `$GO_BOOTSTRAP_PROJECT_NAME-test`.
 
-9. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
+9. A minimal Dockerfile is provided.
 
-10. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
+10. [github.com/tools/godep](https://github.com/tools/godep) is chosen to manage dependencies.
 
-11. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
+11. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
 
-12. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+12. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
 
-13. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
+13. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
+
+14. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+
+15. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
