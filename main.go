@@ -115,7 +115,7 @@ func main() {
 			log.Fatal(string(output))
 		}
 
-		// godep save ./....
+		// godep save ./...
 		log.Print("Running godep save ./...")
 		cmd = exec.Command("godep", "save", "./...")
 		cmd.Dir = fullpath
