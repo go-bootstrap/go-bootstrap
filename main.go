@@ -67,7 +67,7 @@ func main() {
 
 	// 2. Copy everything under blank directory to target directory.
 	log.Print("Copying a blank project to " + fullpath + "...")
-	if output, err := exec.Command("cp", "-rf", "./blank/", fullpath).CombinedOutput(); err != nil {
+	if output, err := exec.Command("cp", "-rf", "./blank/.", fullpath).CombinedOutput(); err != nil {
 		log.Fatal(string(output))
 	}
 
