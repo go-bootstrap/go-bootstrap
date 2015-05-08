@@ -84,6 +84,14 @@ func main() {
 		}
 	}
 
+	// 6. Get all application dependencies for the first time.
+	log.Print("Running go get ./...")
+	cmd := exec.Command("go", "get", "./...")
+	cmd.Dir = fullpath
+	if output, err := cmd.CombinedOutput(); err != nil {
+		log.Fatal(string(output))
+	}
+
 	repoIsGit := strings.HasPrefix(repoName, "git")
 
 	if repoIsGit {
@@ -117,14 +125,6 @@ func main() {
 		log.Print(string(output))
 
 	} else {
-		// Get all application dependencies.
-		log.Print("Running go get ./...")
-		cmd := exec.Command("go", "get", "./...")
-		cmd.Dir = fullpath
-		if output, err := cmd.CombinedOutput(); err != nil {
-			log.Fatal(string(output))
-		}
-
 		// Run tests on newly generated app.
 		log.Print("Running go test ./...")
 		cmd = exec.Command("go", "test", "./...")
