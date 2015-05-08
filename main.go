@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"strings"
 )
@@ -27,6 +28,7 @@ func main() {
 	projectName := dirChunks[len(dirChunks)-1]
 	dbName := projectName
 	testDbName := projectName + "-test"
+	currentUser, _ := user.Current()
 
 	// 1. Create target directory
 	log.Print("Creating " + fullpath + "...")
@@ -42,12 +44,14 @@ func main() {
 	}
 
 	// 3. Interpolate placeholder variables on the new project.
-	log.Print("Replacing placeholder variables to " + repoUser + "/" + projectName + "...")
+	log.Print("Replacing placeholder variables on " + repoUser + "/" + projectName + "...")
 	replacers := make(map[string]string)
 	replacers["$GO_BOOTSTRAP_REPO_NAME"] = repoName
 	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_PROJECT_NAME"] = projectName
 	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
+	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = currentUser.Username
+	replacers["$GO_BOOTSTRAP_DOCKERFILE_DSN"] = helpers.DefaultPGDSN(dbName)
 	if err := helpers.RecursiveSearchReplaceFiles(fullpath, replacers); err != nil {
 		log.Fatal(err)
 	}

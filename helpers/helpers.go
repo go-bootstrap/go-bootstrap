@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -41,8 +40,6 @@ func RecursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 		fileInfo, _ := os.Stat(fileOrDir)
 		if !fileInfo.IsDir() {
 			for oldString, newString := range replacers {
-				log.Print("Replacing " + oldString + " -> '" + newString + "' on " + fileOrDir)
-
 				contentBytes, _ := ioutil.ReadFile(fileOrDir)
 				newContentBytes := bytes.Replace(contentBytes, []byte(oldString), []byte(newString), -1)
 
