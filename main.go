@@ -20,7 +20,11 @@ func main() {
 		log.Fatal("dir option is missing.")
 	}
 
-	fullpath := os.ExpandEnv(filepath.Join("$GOPATH", "src", *dir))
+	// There can be more than one path, separated by colon.
+	gopaths := strings.Split(os.ExpandEnv("$GOPATH"), ":")
+	gopath := gopaths[0]
+
+	fullpath := filepath.Join(gopath, "src", *dir)
 	migrationsPath := filepath.Join(fullpath, "migrations")
 	dirChunks := strings.Split(*dir, "/")
 	repoName := dirChunks[len(dirChunks)-3]
