@@ -70,3 +70,20 @@ migrate -url driver://url -path ./migrations reset
 # Show the current migration version
 migrate -url driver://url -path ./migrations version
 ```
+
+
+## Vendoring Dependencies
+
+Vendoring is handled by a separate project: [github.com/tools/godep](https://github.com/tools/godep).
+
+Here's a quick tutorial on how to use it. For more details, read the readme [here](https://github.com/tools/godep#godep).
+```
+# Save all your dependencies after running go get ./...
+godep save ./...
+
+# Building with godep
+godep go build
+
+# Running tests with godep
+godep go test ./...
+```
