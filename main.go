@@ -76,18 +76,52 @@ func main() {
 		}
 	}
 
-	// 6. Get all application dependencies.
-	log.Print("Running go get ./...")
-	cmd := exec.Command("go", "get", "./...")
-	cmd.Dir = fullpath
-	if output, err := cmd.CombinedOutput(); err != nil {
-		log.Fatal(string(output))
-	}
+	repoIsGit := strings.HasPrefix(repoName, "git")
 
-	// 7. Run tests on newly generated app.
-	log.Print("Running go test ./...")
-	cmd = exec.Command("go", "test", "./...")
-	cmd.Dir = fullpath
-	output, _ := cmd.CombinedOutput()
-	log.Print(string(output))
+	if repoIsGit {
+		// Generate Godeps directory. Currently only works on git related repo.
+		log.Print("Installing github.com/tools/godep...")
+		if output, err := exec.Command("go", "get", "github.com/tools/godep").CombinedOutput(); err != nil {
+			log.Fatal(string(output))
+		}
+
+		// git init.
+		log.Print("Running git init")
+		cmd := exec.Command("git", "init")
+		cmd.Dir = fullpath
+		if output, err := cmd.CombinedOutput(); err != nil {
+			log.Fatal(string(output))
+		}
+
+		// godep save.
+		log.Print("Running godep save")
+		cmd = exec.Command("godep", "save")
+		cmd.Dir = fullpath
+		if output, err := cmd.CombinedOutput(); err != nil {
+			log.Fatal(string(output))
+		}
+
+		// Run tests on newly generated app.
+		log.Print("Running godep go test ./...")
+		cmd = exec.Command("godep", "go", "test", "./...")
+		cmd.Dir = fullpath
+		output, _ := cmd.CombinedOutput()
+		log.Print(string(output))
+
+	} else {
+		// Get all application dependencies.
+		log.Print("Running go get ./...")
+		cmd := exec.Command("go", "get", "./...")
+		cmd.Dir = fullpath
+		if output, err := cmd.CombinedOutput(); err != nil {
+			log.Fatal(string(output))
+		}
+
+		// Run tests on newly generated app.
+		log.Print("Running go test ./...")
+		cmd = exec.Command("go", "test", "./...")
+		cmd.Dir = fullpath
+		output, _ := cmd.CombinedOutput()
+		log.Print(string(output))
+	}
 }
