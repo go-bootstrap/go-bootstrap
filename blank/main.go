@@ -37,7 +37,7 @@ func NewApplication() (*Application, error) {
 		return nil, err
 	}
 
-	cookieStoreSecret := libenv.EnvWithDefault("COOKIE_SECRET", "T0PS3CR3T-CHANGEME-PLZ")
+	cookieStoreSecret := libenv.EnvWithDefault("COOKIE_SECRET", "$GO_BOOTSTRAP_COOKIE_SECRET")
 
 	rm := &Application{}
 	rm.dsn = dsn

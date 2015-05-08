@@ -3,6 +3,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/rand"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -13,6 +14,19 @@ import (
 	"path/filepath"
 	"strings"
 )
+
+func randString(n int) string {
+	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
+
+	var randBytes = make([]byte, n)
+	rand.Read(randBytes)
+
+	for i, b := range randBytes {
+		randBytes[i] = letters[b%byte(len(letters))]
+	}
+
+	return string(randBytes)
+}
 
 func recursiveSearchReplaceFiles(fullpath string, replacers map[string]string) error {
 	fileOrDirList := []string{}
@@ -76,6 +90,7 @@ func main() {
 	replacers := make(map[string]string)
 	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_REPO_NAME"] = repoName
+	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = randString(16)
 	if err := recursiveSearchReplaceFiles(fullpath, replacers); err != nil {
 		log.Fatal(err)
 	}
