@@ -27,7 +27,8 @@
     go run main.go
     ```
 
-### Environment variables for Configuration
+
+### Environment Variables for Configuration
 
 * **HTTP_ADDR:** The host and port. Default: `":8888"`
 
@@ -39,4 +40,33 @@
 
 * **DSN:** RDBMS database path. Default: `postgres://$(whoami)@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable`
 
-* **COOKIE_SECRET:** Cookie secret for session. Default: See the source code.
+* **COOKIE_SECRET:** Cookie secret for session. Default: Auto generated.
+
+
+### Running Migrations
+
+Migration is handled by a separate project: [github.com/mattes/migrate](https://github.com/mattes/migrate).
+
+Here's a quick tutorial on how to use it. For more details, read the tutorial [here](https://github.com/mattes/migrate#usage-from-terminal).
+```
+# Installing the library
+go get github.com/mattes/migrate
+
+# Create a new migration file
+migrate -url driver://url -path ./migrations create {filename}
+
+# Migrate all the way up
+migrate -url driver://url -path ./migrations up
+
+# Migrate all the way down
+migrate -url driver://url -path ./migrations down
+
+# Roll back the most recently applied migration, then run it again.
+migrate -url driver://url -path ./migrations redo
+
+# Run down and then up command
+migrate -url driver://url -path ./migrations reset
+
+# Show the current migration version
+migrate -url driver://url -path ./migrations version
+```
