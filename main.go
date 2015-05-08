@@ -101,9 +101,8 @@ func main() {
 	log.Print("Running go get ./...")
 	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
-	if output, err := cmd.CombinedOutput(); err != nil {
-		log.Fatal(string(output))
-	}
+	output, err = cmd.CombinedOutput()
+	exitOnError(err, string(output))
 
 	repoIsGit := strings.HasPrefix(repoName, "git")
 
@@ -117,7 +116,7 @@ func main() {
 		log.Print("Running git init")
 		cmd := exec.Command("git", "init")
 		cmd.Dir = fullpath
-		output, err := cmd.CombinedOutput()
+		output, err = cmd.CombinedOutput()
 		exitOnError(err, string(output))
 
 		// godep save ./...
