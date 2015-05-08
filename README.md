@@ -49,6 +49,8 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 13. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
 
-14. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+14. [github.com/tylerb/graceful](https://github.com/tylerb/graceful) is chosen to enable graceful shutdown.
 
-15. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
+15. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+
+16. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
