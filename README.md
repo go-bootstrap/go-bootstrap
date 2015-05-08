@@ -19,7 +19,7 @@ Feel free to use or rip-out any of its parts.
 4. Start using it: `cd $GOPATH/src/github.com/{git-user}/{project-name} && go run main.go`
 
 
-## Decisions It Made for You
+## Decisions Made for You
 
 This generator makes **A LOT** of decisions for you. Here's the list of things it uses for your project:
 
