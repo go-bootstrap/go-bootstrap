@@ -1,4 +1,4 @@
-### Installation
+## Installation
 
 1. Install PostgreSQL 9.4.x
 
@@ -28,7 +28,7 @@
     ```
 
 
-### Environment Variables for Configuration
+## Environment Variables for Configuration
 
 * **HTTP_ADDR:** The host and port. Default: `":8888"`
 
@@ -43,7 +43,7 @@
 * **COOKIE_SECRET:** Cookie secret for session. Default: Auto generated.
 
 
-### Running Migrations
+## Running Migrations
 
 Migration is handled by a separate project: [github.com/mattes/migrate](https://github.com/mattes/migrate).
 
