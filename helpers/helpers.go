@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -82,3 +83,15 @@ func DefaultPGDSN(dbName string) string {
 
 	return fmt.Sprintf("postgres://%v@%v%v%v/%v?sslmode=%v", pguser, pghost, hostPortSeparator, pgport, dbName, pgsslmode)
 }
+
+func ChDir(dir string) {
+	err := os.Chdir(dir)
+	ExitOnError(err, "")
+}
+
+func ExitOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s\n%s", msg, err.Error())
+	}
+}
+
