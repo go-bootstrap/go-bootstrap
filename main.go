@@ -84,17 +84,11 @@ func main() {
 		}
 	}
 
-	// 6.a. Get all application dependencies for the first time.
+	// 6. Get all application dependencies for the first time.
 	log.Print("Running go get ./...")
 	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	if output, err := cmd.CombinedOutput(); err != nil {
-		log.Fatal(string(output))
-	}
-
-	// 6.b. Installing test dependencies.
-	log.Print("Installing github.com/satori/go.uuid...")
-	if output, err := exec.Command("go", "get", "github.com/satori/go.uuid").CombinedOutput(); err != nil {
 		log.Fatal(string(output))
 	}
 

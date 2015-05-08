@@ -2,15 +2,15 @@ package dal
 
 import (
 	"fmt"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libstring"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libunix"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/satori/go.uuid"
 	"testing"
 )
 
 func newEmailForTest() string {
-	return fmt.Sprintf("brotato-%v@example.com", uuid.NewV4().String())
+	return fmt.Sprintf("user-%v@example.com", libstring.RandString(32))
 }
 
 func newDbForTest(t *testing.T) *sqlx.DB {
