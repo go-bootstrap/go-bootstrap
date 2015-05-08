@@ -4,10 +4,13 @@ package helpers
 import (
 	"bytes"
 	"crypto/rand"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
 	"path/filepath"
+	"strings"
 )
 
 func RandString(n int) string {
@@ -51,4 +54,34 @@ func RecursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 		}
 	}
 	return nil
+}
+
+func DefaultPGDSN(dbName string) string {
+	// Start by checking environment variables.
+	pguser, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
+	hostPortSeparator := ":"
+
+	if pguser == "" {
+		u, _ := user.Current()
+		pguser = u.Username
+	}
+
+	isUnixDomainSocket := strings.HasPrefix(pghost, "/")
+	if isUnixDomainSocket {
+		hostPortSeparator = "/"
+	}
+
+	if pghost == "" {
+		pghost = "localhost"
+	}
+
+	if pgport == "" {
+		pgport = "5432"
+	}
+
+	if pgsslmode == "" {
+		pgsslmode = "disable"
+	}
+
+	return fmt.Sprintf("postgres://%v@%v%v%v/%v?sslmode=%v", pguser, pghost, hostPortSeparator, pgport, dbName, pgsslmode)
 }

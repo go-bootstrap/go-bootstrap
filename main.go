@@ -3,18 +3,16 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/go-bootstrap/go-bootstrap/helpers"
 	"log"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"strings"
 )
 
 func main() {
-	dir := flag.String("dir", "", "directory of project relative to $GOPATH/src/")
+	dir := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
 	flag.Parse()
 
 	if *dir == "" {
@@ -22,6 +20,7 @@ func main() {
 	}
 
 	fullpath := os.ExpandEnv(filepath.Join("$GOPATH", "src", *dir))
+	migrationsPath := filepath.Join(fullpath, "migrations")
 	dirChunks := strings.Split(*dir, "/")
 	repoName := dirChunks[len(dirChunks)-3]
 	repoUser := dirChunks[len(dirChunks)-2]
@@ -68,12 +67,11 @@ func main() {
 	}
 
 	// 5.b. Run migrations on localhost:5432.
-	u, _ := user.Current()
 	for _, name := range []string{dbName, testDbName} {
-		pgDSN := fmt.Sprintf("postgres://%v@localhost:5432/%v?sslmode=disable", u.Username, name)
+		pgDSN := helpers.DefaultPGDSN(name)
 
 		log.Print("Running database migrations on " + pgDSN + "...")
-		if output, err := exec.Command("migrate", "-url", pgDSN, "-path", filepath.Join(fullpath, "migrations"), "up").CombinedOutput(); err != nil {
+		if output, err := exec.Command("migrate", "-url", pgDSN, "-path", migrationsPath, "up").CombinedOutput(); err != nil {
 			log.Fatal(string(output))
 		}
 	}
