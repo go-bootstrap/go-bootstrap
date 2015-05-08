@@ -12,17 +12,6 @@ import (
 	"strings"
 )
 
-func chDir(dir string) {
-	err := os.Chdir(dir)
-	exitOnError(err, "")
-}
-
-func exitOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s\n%s", msg, err.Error())
-	}
-}
-
 func main() {
 	dir := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
 	flag.Parse()
@@ -48,20 +37,20 @@ func main() {
 	// 1. Create target directory
 	log.Print("Creating " + fullpath + "...")
 	err := os.MkdirAll(fullpath, 0755)
-	exitOnError(err, "")
+	helpers.ExitOnError(err, "")
 
 	// 2. Copy everything under blank directory to target directory.
 	log.Print("Copying a blank project to " + fullpath + "...")
 	blankDir := os.ExpandEnv(filepath.Join("$GOPATH", "src", "github.com", "go-bootstrap", "go-bootstrap", "blank"))
 	currDir, err := os.Getwd()
-	exitOnError(err, "Can't get current path!")
+	helpers.ExitOnError(err, "Can't get current path!")
 
-	chDir(blankDir)
+	helpers.ChDir(blankDir)
 
 	output, err := exec.Command("cp", "-rf", ".", fullpath).CombinedOutput()
-	exitOnError(err, string(output))
+	helpers.ExitOnError(err, string(output))
 
-	chDir(currDir)
+	helpers.ChDir(currDir)
 
 	// 3. Interpolate placeholder variables on the new project.
 	log.Print("Replacing placeholder variables on " + repoUser + "/" + projectName + "...")
@@ -73,7 +62,7 @@ func main() {
 	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = currentUser.Username
 	replacers["$GO_BOOTSTRAP_DOCKERFILE_DSN"] = helpers.DefaultPGDSN(dbName)
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
-	exitOnError(err, "")
+	helpers.ExitOnError(err, "")
 
 	// 4. Create PostgreSQL databases.
 	for _, name := range []string{dbName, testDbName} {
@@ -86,7 +75,7 @@ func main() {
 	// 5.a. go get github.com/mattes/migrate.
 	log.Print("Installing github.com/mattes/migrate...")
 	output, err = exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
-	exitOnError(err, string(output))
+	helpers.ExitOnError(err, string(output))
 
 	// 5.b. Run migrations on localhost:5432.
 	for _, name := range []string{dbName, testDbName} {
@@ -94,7 +83,7 @@ func main() {
 
 		log.Print("Running database migrations on " + pgDSN + "...")
 		output, err := exec.Command("migrate", "-url", pgDSN, "-path", migrationsPath, "up").CombinedOutput()
-		exitOnError(err, string(output))
+		helpers.ExitOnError(err, string(output))
 	}
 
 	// 6. Get all application dependencies for the first time.
@@ -102,7 +91,7 @@ func main() {
 	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	output, err = cmd.CombinedOutput()
-	exitOnError(err, string(output))
+	helpers.ExitOnError(err, string(output))
 
 	repoIsGit := strings.HasPrefix(repoName, "git")
 
@@ -110,21 +99,21 @@ func main() {
 		// Generate Godeps directory. Currently only works on git related repo.
 		log.Print("Installing github.com/tools/godep...")
 		output, err := exec.Command("go", "get", "github.com/tools/godep").CombinedOutput()
-		exitOnError(err, string(output))
+		helpers.ExitOnError(err, string(output))
 
 		// git init.
 		log.Print("Running git init")
 		cmd := exec.Command("git", "init")
 		cmd.Dir = fullpath
 		output, err = cmd.CombinedOutput()
-		exitOnError(err, string(output))
+		helpers.ExitOnError(err, string(output))
 
 		// godep save ./...
 		log.Print("Running godep save ./...")
 		cmd = exec.Command("godep", "save", "./...")
 		cmd.Dir = fullpath
 		output, err = cmd.CombinedOutput()
-		exitOnError(err, string(output))
+		helpers.ExitOnError(err, string(output))
 
 		// Run tests on newly generated app.
 		log.Print("Running godep go test ./...")
