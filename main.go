@@ -117,7 +117,7 @@ func main() {
 		log.Print("Running git init")
 		cmd := exec.Command("git", "init")
 		cmd.Dir = fullpath
-		output, err = cmd.CombinedOutput()
+		output, err := cmd.CombinedOutput()
 		exitOnError(err, string(output))
 
 		// godep save ./...
@@ -139,7 +139,7 @@ func main() {
 		log.Print("Running go test ./...")
 		cmd = exec.Command("go", "test", "./...")
 		cmd.Dir = fullpath
-		output, _ := cmd.CombinedOutput()
+		output, _ = cmd.CombinedOutput()
 		log.Print(string(output))
 	}
 }
