@@ -56,7 +56,7 @@ func RecursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 
 func DefaultPGDSN(dbName string) string {
 	// Start by checking environment variables.
-	pguser, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
+	pguser, pgpass, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGPASSWORD"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
 	hostPortSeparator := ":"
 
 	if pguser == "" {
@@ -81,7 +81,12 @@ func DefaultPGDSN(dbName string) string {
 		pgsslmode = "disable"
 	}
 
-	return fmt.Sprintf("postgres://%v@%v%v%v/%v?sslmode=%v", pguser, pghost, hostPortSeparator, pgport, dbName, pgsslmode)
+	dsn := fmt.Sprintf("postgres://%v@%v%v%v/%v?sslmode=%v", pguser, pghost, hostPortSeparator, pgport, dbName, pgsslmode)
+	if pgpass != "" {
+		dsn = dsn + "&password=" + pgpass
+	}
+
+	return dsn
 }
 
 func ChDir(dir string) {
@@ -94,4 +99,3 @@ func ExitOnError(err error, msg string) {
 		log.Fatalf("%s\n%s", msg, err.Error())
 	}
 }
-
