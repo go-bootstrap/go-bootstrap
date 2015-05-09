@@ -25,7 +25,6 @@ func main() {
 	gopath := gopaths[0]
 
 	fullpath := filepath.Join(gopath, "src", *dir)
-	migrationsPath := filepath.Join(fullpath, "migrations")
 	dirChunks := strings.Split(*dir, "/")
 	repoName := dirChunks[len(dirChunks)-3]
 	repoUser := dirChunks[len(dirChunks)-2]
@@ -54,41 +53,28 @@ func main() {
 
 	// 3. Interpolate placeholder variables on the new project.
 	log.Print("Replacing placeholder variables on " + repoUser + "/" + projectName + "...")
+
 	replacers := make(map[string]string)
 	replacers["$GO_BOOTSTRAP_REPO_NAME"] = repoName
 	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_PROJECT_NAME"] = projectName
 	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
 	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = currentUser.Username
-	replacers["$GO_BOOTSTRAP_DOCKERFILE_DSN"] = helpers.DefaultPGDSN(dbName)
+	replacers["$GO_BOOTSTRAP_PG_DSN"] = helpers.DefaultPGDSN(dbName)
+	replacers["$GO_BOOTSTRAP_PG_TEST_DSN"] = helpers.DefaultPGDSN(testDbName)
+
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")
 
-	// 4. Create PostgreSQL databases.
-	for _, name := range []string{dbName, testDbName} {
-		log.Print("Creating a database named " + name + "...")
-		if exec.Command("createdb", name).Run() != nil {
-			log.Print("Unable to create PostgreSQL database: " + name)
-		}
-	}
+	// 4. Bootstrap databases.
+	cmd := exec.Command("bash", "scripts/db-bootstrap")
+	cmd.Dir = fullpath
+	output, _ = cmd.CombinedOutput()
+	log.Print(string(output))
 
-	// 5.a. go get github.com/mattes/migrate.
-	log.Print("Installing github.com/mattes/migrate...")
-	output, err = exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
-	helpers.ExitOnError(err, string(output))
-
-	// 5.b. Run migrations on localhost:5432.
-	for _, name := range []string{dbName, testDbName} {
-		pgDSN := helpers.DefaultPGDSN(name)
-
-		log.Print("Running database migrations on " + pgDSN + "...")
-		output, err := exec.Command("migrate", "-url", pgDSN, "-path", migrationsPath, "up").CombinedOutput()
-		helpers.ExitOnError(err, string(output))
-	}
-
-	// 6. Get all application dependencies for the first time.
+	// 5. Get all application dependencies for the first time.
 	log.Print("Running go get ./...")
-	cmd := exec.Command("go", "get", "./...")
+	cmd = exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	output, err = cmd.CombinedOutput()
 	helpers.ExitOnError(err, string(output))
