@@ -44,12 +44,14 @@ func main() {
 	currDir, err := os.Getwd()
 	helpers.ExitOnError(err, "Can't get current path!")
 
-	helpers.ChDir(blankDir)
+	err = os.Chdir(blankDir)
+	helpers.ExitOnError(err, "")
 
 	output, err := exec.Command("cp", "-rf", ".", fullpath).CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
-	helpers.ChDir(currDir)
+	err = os.Chdir(currDir)
+	helpers.ExitOnError(err, "")
 
 	// 3. Interpolate placeholder variables on the new project.
 	log.Print("Replacing placeholder variables on " + repoUser + "/" + projectName + "...")
@@ -61,7 +63,9 @@ func main() {
 	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
 	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = currentUser.Username
 	replacers["$GO_BOOTSTRAP_PG_DSN"] = helpers.DefaultPGDSN(dbName)
+	replacers["$GO_BOOTSTRAP_ESCAPED_PG_DSN"] = helpers.BashEscape(helpers.DefaultPGDSN(dbName))
 	replacers["$GO_BOOTSTRAP_PG_TEST_DSN"] = helpers.DefaultPGDSN(testDbName)
+	replacers["$GO_BOOTSTRAP_ESCAPED_PG_TEST_DSN"] = helpers.BashEscape(helpers.DefaultPGDSN(testDbName))
 
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")

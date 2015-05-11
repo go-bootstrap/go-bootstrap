@@ -13,6 +13,12 @@ import (
 	"strings"
 )
 
+// BashEscape escapes various characters in bash environment.
+func BashEscape(in string) string {
+	return strings.Replace(in, "&", `\&`, -1)
+}
+
+// RandString generates random string given n length.
 func RandString(n int) string {
 	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
 
@@ -26,6 +32,7 @@ func RandString(n int) string {
 	return string(randBytes)
 }
 
+// RecursiveSearchReplaceFiles find and replace various strings defined in replacers.
 func RecursiveSearchReplaceFiles(fullpath string, replacers map[string]string) error {
 	fileOrDirList := []string{}
 	err := filepath.Walk(fullpath, func(path string, f os.FileInfo, err error) error {
@@ -54,6 +61,7 @@ func RecursiveSearchReplaceFiles(fullpath string, replacers map[string]string) e
 	return nil
 }
 
+// DefaultPGDSN generates default PostgreSQL DSN path.
 func DefaultPGDSN(dbName string) string {
 	// Start by checking environment variables.
 	pguser, pgpass, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGPASSWORD"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
@@ -89,11 +97,7 @@ func DefaultPGDSN(dbName string) string {
 	return dsn
 }
 
-func ChDir(dir string) {
-	err := os.Chdir(dir)
-	ExitOnError(err, "")
-}
-
+// ExitOnError logs error message in fatal mode.
 func ExitOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s\n%s", msg, err.Error())

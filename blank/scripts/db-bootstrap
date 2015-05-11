@@ -4,10 +4,10 @@ echo "Creating database $GO_BOOTSTRAP_PROJECT_NAME..."
 createdb $GO_BOOTSTRAP_PROJECT_NAME
 
 echo "Running migration on $GO_BOOTSTRAP_PG_DSN..."
-migrate -url $GO_BOOTSTRAP_PG_DSN -path ./migrations up
+migrate -url $GO_BOOTSTRAP_ESCAPED_PG_DSN -path ./migrations up
 
 echo "Creating database $GO_BOOTSTRAP_PROJECT_NAME-test"
 createdb $GO_BOOTSTRAP_PROJECT_NAME-test
 
 echo "Running migration on $GO_BOOTSTRAP_PG_TEST_DSN..."
-migrate -url $GO_BOOTSTRAP_PG_TEST_DSN -path ./migrations up
+migrate -url $GO_BOOTSTRAP_ESCAPED_PG_TEST_DSN -path ./migrations up
