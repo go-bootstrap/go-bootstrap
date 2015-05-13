@@ -71,13 +71,18 @@ func main() {
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")
 
-	// 4. Bootstrap databases.
+	// 4. go get github.com/mattes/migrate.
+	log.Print("Installing github.com/mattes/migrate...")
+	output, err = exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
+	helpers.ExitOnError(err, string(output))
+
+	// 5. Bootstrap databases.
 	cmd := exec.Command("bash", "scripts/db-bootstrap")
 	cmd.Dir = fullpath
 	output, _ = cmd.CombinedOutput()
 	log.Print(string(output))
 
-	// 5. Get all application dependencies for the first time.
+	// 6. Get all application dependencies for the first time.
 	log.Print("Running go get ./...")
 	cmd = exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
