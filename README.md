@@ -8,6 +8,12 @@ This is not a web framework. It generates a skeleton web project for you to kick
 Feel free to use or rip-out any of its parts.
 
 
+## Prerequisites
+
+1. PostgreSQL
+
+2. Go programming language, version 1.3.x or newer.
+
 ## Installation
 
 1. `go get github.com/go-bootstrap/go-bootstrap`
@@ -15,6 +21,12 @@ Feel free to use or rip-out any of its parts.
 2. `$GOPATH/bin/go-bootstrap -dir github.com/{git-user}/{project-name}`
 
 3. Start using it: `cd $GOPATH/src/github.com/{git-user}/{project-name} && go run main.go`
+
+
+## PostgreSQL Environment Variables
+
+If you have `PGUSER`, `PGPASSWORD`, `PGHOST`, `PGPORT`, `PGSSLMODE` environment variables set,
+they will be used to generate and bootstrap the database.
 
 
 ## Decisions Made for You
