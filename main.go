@@ -41,7 +41,7 @@ func main() {
 
 	// 2. Copy everything under blank directory to target directory.
 	log.Print("Copying a blank project to " + fullpath + "...")
-	blankDir := os.ExpandEnv(filepath.Join("$GOPATH", "src", "github.com", "go-bootstrap", "go-bootstrap", "blank"))
+	blankDir := os.ExpandEnv(filepath.Join(gopath, "src", "github.com", "go-bootstrap", "go-bootstrap", "blank"))
 	currDir, err := os.Getwd()
 	helpers.ExitOnError(err, "Can't get current path!")
 
