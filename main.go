@@ -24,8 +24,9 @@ func main() {
 	gopaths := strings.Split(os.ExpandEnv("$GOPATH"), ":")
 	gopath := gopaths[0]
 
-	fullpath := filepath.Join(gopath, "src", *dir)
-	dirChunks := strings.Split(*dir, "/")
+	trimmedPath := strings.Trim(*dir, "/")
+	fullpath := filepath.Join(gopath, "src", trimmedPath)
+	dirChunks := strings.Split(trimmedPath, "/")
 	repoName := dirChunks[len(dirChunks)-3]
 	repoUser := dirChunks[len(dirChunks)-2]
 	projectName := dirChunks[len(dirChunks)-1]

@@ -32,3 +32,11 @@ func TestDefaultPGDSN(t *testing.T) {
 		t.Errorf("Incorrectly generate DSN. Output: %v", dbName)
 	}
 }
+
+func TestTrim(t *testing.T) {
+	in := "/github.com/bro/tato/"
+	out := strings.Trim(in, "/")
+	if out != "github.com/bro/tato" {
+		t.Errorf("Incorrectly trim string. Output: %v", out)
+	}
+}
