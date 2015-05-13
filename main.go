@@ -72,7 +72,7 @@ func main() {
 	helpers.ExitOnError(err, "")
 
 	// 4. go get github.com/mattes/migrate.
-	log.Print("Installing github.com/mattes/migrate...")
+	log.Print("Running go get github.com/mattes/migrate...")
 	output, err = exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
@@ -90,19 +90,29 @@ func main() {
 	helpers.ExitOnError(err, string(output))
 
 	repoIsGit := strings.HasPrefix(repoName, "git")
+	repoIsHg := strings.HasPrefix(repoName, "bitbucket")
 
-	if repoIsGit {
-		// Generate Godeps directory. Currently only works on git related repo.
+	// Generate Godeps directory.
+	// Works only on git repo or bitbucket repo.
+	if repoIsGit || repoIsHg {
 		log.Print("Installing github.com/tools/godep...")
 		output, err := exec.Command("go", "get", "github.com/tools/godep").CombinedOutput()
 		helpers.ExitOnError(err, string(output))
 
-		// git init.
-		log.Print("Running git init")
-		cmd := exec.Command("git", "init")
-		cmd.Dir = fullpath
-		output, err = cmd.CombinedOutput()
-		helpers.ExitOnError(err, string(output))
+		if repoIsGit {
+			log.Print("Running git init...")
+			cmd := exec.Command("git", "init")
+			cmd.Dir = fullpath
+			output, err = cmd.CombinedOutput()
+			helpers.ExitOnError(err, string(output))
+		}
+		if repoIsHg {
+			log.Print("Running hg init...")
+			cmd := exec.Command("hg", "init")
+			cmd.Dir = fullpath
+			output, _ = cmd.CombinedOutput()
+			log.Print(string(output))
+		}
 
 		// godep save ./...
 		log.Print("Running godep save ./...")
