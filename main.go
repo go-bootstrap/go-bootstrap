@@ -13,18 +13,32 @@ import (
 )
 
 func main() {
-	dir := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
+	dirInput := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
+	gopathInput := flag.String("gopath", "", "Choose which $GOPATH to use")
+
 	flag.Parse()
 
-	if *dir == "" {
+	if *dirInput == "" {
 		log.Fatal("dir option is missing.")
 	}
 
 	// There can be more than one path, separated by colon.
 	gopaths := strings.Split(os.ExpandEnv("$GOPATH"), ":")
+
+	// By default, we choose the first GOPATH.
 	gopath := gopaths[0]
 
-	trimmedPath := strings.Trim(*dir, "/")
+	// But if user specified one, we choose that one.
+	if *gopathInput != "" {
+		for _, gp := range gopaths {
+			if gp == *gopathInput {
+				gopath = gp
+				break
+			}
+		}
+	}
+
+	trimmedPath := strings.Trim(*dirInput, "/")
 	fullpath := filepath.Join(gopath, "src", trimmedPath)
 	dirChunks := strings.Split(trimmedPath, "/")
 	repoName := dirChunks[len(dirChunks)-3]
