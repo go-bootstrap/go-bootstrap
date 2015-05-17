@@ -39,12 +39,12 @@ func NewApplication() (*Application, error) {
 
 	cookieStoreSecret := libenv.EnvWithDefault("COOKIE_SECRET", "$GO_BOOTSTRAP_COOKIE_SECRET")
 
-	rm := &Application{}
-	rm.dsn = dsn
-	rm.db = db
-	rm.cookieStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	app := &Application{}
+	app.dsn = dsn
+	app.db = db
+	app.cookieStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 
-	return rm, err
+	return app, err
 }
 
 // Application is the application object that runs HTTP server.
@@ -54,17 +54,17 @@ type Application struct {
 	cookieStore *sessions.CookieStore
 }
 
-func (rm *Application) middlewareStruct() (*interpose.Middleware, error) {
+func (app *Application) middlewareStruct() (*interpose.Middleware, error) {
 	middle := interpose.New()
-	middle.Use(middlewares.SetDB(rm.db))
-	middle.Use(middlewares.SetCookieStore(rm.cookieStore))
+	middle.Use(middlewares.SetDB(app.db))
+	middle.Use(middlewares.SetCookieStore(app.cookieStore))
 
-	middle.UseHandler(rm.mux())
+	middle.UseHandler(app.mux())
 
 	return middle, nil
 }
 
-func (rm *Application) mux() *gorilla_mux.Router {
+func (app *Application) mux() *gorilla_mux.Router {
 	MustLogin := middlewares.MustLogin
 
 	router := gorilla_mux.NewRouter()
