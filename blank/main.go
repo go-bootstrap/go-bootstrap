@@ -113,8 +113,11 @@ func main() {
 
 	logrus.Infoln("Running HTTP server on "+ serverAddress)
 	if certFile != "" && keyFile != "" {
-		srv.ListenAndServeTLS(certFile, keyFile)
+		err = srv.ListenAndServeTLS(certFile, keyFile)
 	} else {
-		srv.ListenAndServe()
+		err = srv.ListenAndServe()
+	}
+	if err != nil {
+		logrus.Fatal(err.Error())
 	}
 }
