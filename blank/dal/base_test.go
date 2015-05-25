@@ -2,6 +2,7 @@ package dal
 
 import (
 	"fmt"
+	"os"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libstring"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libunix"
 	"github.com/jmoiron/sqlx"
@@ -14,12 +15,27 @@ func newEmailForTest() string {
 }
 
 func newDbForTest(t *testing.T) *sqlx.DB {
-	u, err := libunix.CurrentUser()
-	if err != nil {
-		t.Fatalf("Getting current user should never fail. Error: %v", err)
+	pguser, pgpass, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGPASSWORD"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
+	if pguser == ""{
+		pguser, err := libunix.CurrentUser()
+		if err != nil {
+			t.Fatalf("Getting current user should never fail. Error: %v", err)
+		}
 	}
 
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME-test?sslmode=disable", u))
+	if pghost == "" {
+		pghost = "localhost"
+	}
+
+	if pgport == "" {
+		pgport = "5432"
+	}
+
+	if pgsslmode == "" {
+		pgsslmode = "disable"
+	}
+
+	db, err := sqlx.Connect("postgres", fmt.Sprintf("postgres://%v@%v:%v/$GO_BOOTSTRAP_PROJECT_NAME-test?sslmode=%v", pguser, pghost, pgport, pgsslmode))
 	if err != nil {
 		t.Fatalf("Connecting to local postgres should never fail. Error: %v", err)
 	}
