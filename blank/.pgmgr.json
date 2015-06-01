@@ -1,0 +1,1 @@
+{ "url": "$GO_BOOTSTRAP_PG_DSN", "migration-folder": "migrations", "dump-file": "migrations/dump.sql", "seed-tables": [] }

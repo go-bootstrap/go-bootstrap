@@ -97,9 +97,9 @@ func main() {
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")
 
-	// 4. go get github.com/mattes/migrate.
-	log.Print("Running go get github.com/mattes/migrate...")
-	output, err = exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
+	// 4. go get github.com/rnubel/pgmgr
+	log.Print("Running go get github.com/rnubel/pgmgr...")
+	output, err = exec.Command("go", "get", "github.com/rnubel/pgmgr").CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
 	// 5. Bootstrap databases.
