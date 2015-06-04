@@ -4,6 +4,7 @@ package helpers
 import (
 	"bytes"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,7 +12,57 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
+
+	"github.com/kardianos/osext"
 )
+
+// GetGoPaths returns the GOPATH as an array of paths
+func GoPaths() []string {
+	return strings.Split(os.Getenv("GOPATH"), ":")
+}
+
+// IsValidGoPath checks if a path is part of the GOPATH
+func IsValidGoPath(gopath string) bool {
+	for _, part := range GoPaths() {
+		if gopath == part {
+			return true
+		}
+	}
+	return false
+}
+
+// GetBlankDir returns the path to go-bootstrap's blank directory
+func GetBlankDir() (string, error) {
+	executableDir, err := osext.ExecutableFolder()
+	ExitOnError(err, "Cannot find go-bootstrap path")
+
+	ret := filepath.Join(executableDir, "blank")
+	if _, err = os.Stat(ret); err == nil {
+		return ret, nil
+	}
+
+	base := filepath.Join("src", "github.com", "go-bootstrap", "go-bootstrap")
+
+	// if the blank project can't be found in the executable's dir,
+	// try to locate the source code, it should be there.
+	// $gopath/bin/../src/github.com/go-bootstrap/go-bootstrap
+	srcDir := filepath.Join(filepath.Dir(executableDir), base)
+	ret = filepath.Join(srcDir, "blank")
+	if _, err = os.Stat(ret); err == nil {
+		return ret, nil
+	}
+
+	// As the last resort search all gopaths.
+	// This is useful when executed with `go run`
+	for _, gopath := range GoPaths() {
+		ret = filepath.Join(filepath.Join(gopath, base), "blank")
+		if _, err = os.Stat(ret); err == nil {
+			return ret, nil
+		}
+	}
+
+	return "", errors.New("Cannot find go-bootstrap's blank directory")
+}
 
 // BashEscape escapes various characters in bash environment.
 func BashEscape(in string) string {

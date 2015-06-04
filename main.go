@@ -3,13 +3,14 @@ package main
 
 import (
 	"flag"
-	"github.com/go-bootstrap/go-bootstrap/helpers"
 	"log"
 	"os"
 	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strings"
+
+	"github.com/go-bootstrap/go-bootstrap/helpers"
 )
 
 func main() {
@@ -19,28 +20,37 @@ func main() {
 	flag.Parse()
 
 	if *dirInput == "" {
-		log.Fatal("dir option is missing.")
+		log.Fatalln("dir option is missing.")
 	}
 
 	// There can be more than one path, separated by colon.
-	gopaths := strings.Split(os.ExpandEnv("$GOPATH"), ":")
+	gopaths := helpers.GoPaths()
+	if len(gopaths) == 0 {
+		log.Fatalln("GOPATH is not set.")
+	}
 
-	// By default, we choose the first GOPATH.
-	gopath := gopaths[0]
+	// By default, we choose the last GOPATH.
+	gopath := gopaths[len(gopaths)-1]
 
 	// But if user specified one, we choose that one.
 	if *gopathInput != "" {
-		for _, gp := range gopaths {
-			if gp == *gopathInput {
-				gopath = gp
-				break
-			}
+		abs, err := filepath.Abs(*gopathInput)
+		if err == nil && helpers.IsValidGoPath(abs) {
+			gopath = abs
+		} else {
+			log.Fatalln("Cannot find " + *gopathInput + " in $GOPATH")
 		}
 	}
 
 	trimmedPath := strings.Trim(*dirInput, "/")
 	fullpath := filepath.Join(gopath, "src", trimmedPath)
 	dirChunks := strings.Split(trimmedPath, "/")
+
+	if len(dirChunks) < 3 {
+		log.Fatalln("Cannot extract repo name, repo user and project name, " +
+			"-dir should have three parts, seperated by '/'.")
+	}
+
 	repoName := dirChunks[len(dirChunks)-3]
 	repoUser := dirChunks[len(dirChunks)-2]
 	projectName := dirChunks[len(dirChunks)-1]
@@ -48,14 +58,16 @@ func main() {
 	testDbName := projectName + "-test"
 	currentUser, _ := user.Current()
 
+	blankDir, err := helpers.GetBlankDir()
+	helpers.ExitOnError(err, "")
+
 	// 1. Create target directory
 	log.Print("Creating " + fullpath + "...")
-	err := os.MkdirAll(fullpath, 0755)
+	err = os.MkdirAll(fullpath, 0755)
 	helpers.ExitOnError(err, "")
 
 	// 2. Copy everything under blank directory to target directory.
 	log.Print("Copying a blank project to " + fullpath + "...")
-	blankDir := os.ExpandEnv(filepath.Join(gopath, "src", "github.com", "go-bootstrap", "go-bootstrap", "blank"))
 	currDir, err := os.Getwd()
 	helpers.ExitOnError(err, "Can't get current path!")
 
