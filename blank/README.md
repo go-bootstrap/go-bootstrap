@@ -4,21 +4,21 @@
 
 2. Install Go 1.4.x, git, setup `$GOPATH`, and `PATH=$PATH:$GOPATH/bin`
 
-3. Create PostgreSQL database.
-    ```
-    createdb $GO_BOOTSTRAP_PROJECT_NAME
-    ```
-
-4. Get the source code.
+3. Get the source code.
     ```
     go get $GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
     ```
 
+4. Create PostgreSQL database.
+    ```
+    cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
+    go get github.com/rnubel/pgmgr
+    pgmgr db create
+    ```
+
 5. Run the PostgreSQL migration.
     ```
-    go get github.com/mattes/migrate
-    cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
-    migrate -url postgres://$(whoami)@$localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable -path ./migrations up
+    pgmgr db migrate
     ```
 
 6. Run the server
@@ -45,30 +45,30 @@
 
 ## Running Migrations
 
-Migration is handled by a separate project: [github.com/mattes/migrate](https://github.com/mattes/migrate).
+Migration is handled by a separate project: [github.com/rnubel/pgmgr](https://github.com/rnubel/pgmgr).
 
-Here's a quick tutorial on how to use it. For more details, read the tutorial [here](https://github.com/mattes/migrate#usage-from-terminal).
+Here's a quick tutorial on how to use it. For more details, read the tutorial [here](https://github.com/rnubel/pgmgr#usage).
 ```
 # Installing the library
-go get github.com/mattes/migrate
+go get github.com/rnubel/pgmgr
 
 # Create a new migration file
-migrate -url driver://url -path ./migrations create {filename}
+pgmgr migration {filename}
 
 # Migrate all the way up
-migrate -url driver://url -path ./migrations up
+pgmgr db migrate
 
-# Migrate all the way down
-migrate -url driver://url -path ./migrations down
+# Reset to the latest dump
+pgmgr db drop
+pgmgr db create
+pgmgr db load
 
 # Roll back the most recently applied migration, then run it again.
-migrate -url driver://url -path ./migrations redo
+pgmgr db rollback
+pgmgr db migrate
 
-# Run down and then up command
-migrate -url driver://url -path ./migrations reset
-
-# Show the current migration version
-migrate -url driver://url -path ./migrations version
+# Show the latest migration version
+pgmgr db version
 ```
 
 
