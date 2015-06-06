@@ -4,24 +4,19 @@
 
 2. Install Go 1.4.x, git, setup `$GOPATH`, and `PATH=$PATH:$GOPATH/bin`
 
-3. Get the source code.
-    ```
-    go get $GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
-    ```
-
-4. Create PostgreSQL database.
+3. Create PostgreSQL database.
     ```
     cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
     go get github.com/rnubel/pgmgr
     pgmgr db create
     ```
 
-5. Run the PostgreSQL migration.
+4. Run the PostgreSQL migration.
     ```
     pgmgr db migrate
     ```
 
-6. Run the server
+5. Run the server
     ```
     cd $GOPATH/src/$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME
     go run main.go
