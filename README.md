@@ -63,6 +63,6 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 15. [github.com/tylerb/graceful](https://github.com/tylerb/graceful) is chosen to enable graceful shutdown.
 
-16. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration tool.
+16. [github.com/rnubel/pgmgr](https://github.com/rnubel/pgmgr) is chosen as the database migration and management tool.
 
 17. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
