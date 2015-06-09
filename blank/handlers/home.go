@@ -17,7 +17,7 @@ func GetHome(w http.ResponseWriter, r *http.Request) {
 	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	currentUser, ok := session.Values["user"].(*dal.UserRow)
 	if !ok {
-		http.Redirect(w, r, "/logout", 301)
+		http.Redirect(w, r, "/logout", 302)
 		return
 	}
 
