@@ -2,10 +2,11 @@
 package middlewares
 
 import (
+	"net/http"
+
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
-	"net/http"
 )
 
 func SetDB(db *sqlx.DB) func(http.Handler) http.Handler {
@@ -36,7 +37,7 @@ func MustLogin(next http.Handler) http.Handler {
 		userRowInterface := session.Values["user"]
 
 		if userRowInterface == nil {
-			http.Redirect(res, req, "/login", 301)
+			http.Redirect(res, req, "/login", 302)
 			return
 		}
 
