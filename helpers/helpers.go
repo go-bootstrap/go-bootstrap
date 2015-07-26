@@ -119,8 +119,7 @@ func DefaultPGDSN(dbName string) string {
 	hostPortSeparator := ":"
 
 	if pguser == "" {
-		u, _ := user.Current()
-		pguser = u.Username
+		pguser = GetCurrentUser()
 	}
 
 	isUnixDomainSocket := strings.HasPrefix(pghost, "/")
@@ -152,5 +151,22 @@ func DefaultPGDSN(dbName string) string {
 func ExitOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s\n%s", msg, err.Error())
+	}
+}
+
+// GetCurrentUser returns the username of the current user.
+func GetCurrentUser() string {
+	currentUser, err := user.Current()
+
+	if err == nil {
+		return currentUser.Username
+	} else {
+		username := os.Getenv("USERNAME")
+
+		if username == "" {
+			log.Fatalln("Cannot determine current user's username")
+		}
+
+		return username
 	}
 }

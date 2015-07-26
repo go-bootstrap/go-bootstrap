@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -56,20 +55,6 @@ func main() {
 	projectName := dirChunks[len(dirChunks)-1]
 	dbName := projectName
 	testDbName := projectName + "-test"
-
-	var userName string
-	currentUser, err := user.Current()
-
-	if err == nil {
-		userName = currentUser.Username
-	} else {
-		userName = os.Getenv("USERNAME")
-
-		if userName == "" {
-			log.Fatalln("Cannot determine current user's username")
-		}
-	}
-
 	blankDir, err := helpers.GetBlankDir()
 	helpers.ExitOnError(err, "")
 
@@ -100,7 +85,7 @@ func main() {
 	replacers["$GO_BOOTSTRAP_REPO_USER"] = repoUser
 	replacers["$GO_BOOTSTRAP_PROJECT_NAME"] = projectName
 	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
-	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = userName
+	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = helpers.GetCurrentUser()
 	replacers["$GO_BOOTSTRAP_PG_DSN"] = helpers.DefaultPGDSN(dbName)
 	replacers["$GO_BOOTSTRAP_ESCAPED_PG_DSN"] = helpers.BashEscape(helpers.DefaultPGDSN(dbName))
 	replacers["$GO_BOOTSTRAP_PG_TEST_DSN"] = helpers.DefaultPGDSN(testDbName)
