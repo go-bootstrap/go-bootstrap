@@ -16,11 +16,13 @@ Feel free to use or rip-out any of its parts.
 
 ## Installation
 
-1. `go get github.com/go-bootstrap/go-bootstrap`
+1. export PGPASSWORD=<pgpassword for current user>
 
-2. `$GOPATH/bin/go-bootstrap -dir github.com/{git-user}/{project-name}`
+2. `go get github.com/go-bootstrap/go-bootstrap`
 
-3. Start using it: `cd $GOPATH/src/github.com/{git-user}/{project-name} && go run main.go`
+3. `$GOPATH/bin/go-bootstrap -dir github.com/{git-user}/{project-name}`
+
+4. Start using it: `cd $GOPATH/src/github.com/{git-user}/{project-name} && go run main.go`
 
 
 ## PostgreSQL Environment Variables
