@@ -14,6 +14,8 @@ Feel free to use or rip-out any of its parts.
 
 2. Go programming language, version 1.3.x or newer.
 
+3. Ensure `$GOPATH/bin` is in your `$PATH`. Example: `PATH=$PATH:$GOPATH/bin`
+
 ## Installation
 
 1. `go get github.com/go-bootstrap/go-bootstrap`
