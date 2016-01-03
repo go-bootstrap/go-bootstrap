@@ -68,3 +68,5 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 16. [github.com/rnubel/pgmgr](https://github.com/rnubel/pgmgr) is chosen as the database migration and management tool.
 
 17. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
+
+18. [github.com/spf13/viper](https://github.com/spf13/viper) is chosen to manage application config.
