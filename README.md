@@ -37,7 +37,7 @@ they will be used to generate and bootstrap the database.
 
 This generator makes **A LOT** of decisions for you. Here's the list of things it uses for your project:
 
-1. PostgreSQL is chosen for the database.
+1. PostgreSQL or MySQL are chosen for the database.
 
 2. bcrypt is chosen as the password hasher.
 
@@ -47,9 +47,9 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 5. Static directory is located under `/static`.
 
-6. Model directory is located under `/dal` (Database Access Layer).
+6. Model directory is located under `/models`.
 
-7. It does not use ORM nor installs one.
+7. It does not use full blown ORM.
 
 8. Test database is automatically created under `$GO_BOOTSTRAP_PROJECT_NAME-test`.
 
