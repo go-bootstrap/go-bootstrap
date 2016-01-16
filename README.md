@@ -7,12 +7,12 @@ This is not a web framework. It generates a skeleton web project for you to kick
 
 Feel free to use or rip-out any of its parts.
 
-**NOTE:** I do not have a Windows machine so this project most likely not working on Windows due to reliance on Linux's system call to get current user.
+**NOTE:** I do not have a Windows machine to test this. At the moment, PostgreSQL template is not working on Windows due to reliance on Linux's system call to get current user.
 
 
 ## Prerequisites
 
-1. PostgreSQL
+1. PostgreSQL or MySQL if you choose to use a database.
 
 2. Go programming language, version 1.3.x or newer.
 
