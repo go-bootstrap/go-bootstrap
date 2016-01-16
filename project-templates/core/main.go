@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/tylerb/graceful"
