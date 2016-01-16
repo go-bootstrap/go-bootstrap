@@ -9,17 +9,10 @@ import (
 	"time"
 
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/application"
-	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libunix"
 )
 
 func newConfig() (*viper.Viper, error) {
-	u, err := libunix.CurrentUser()
-	if err != nil {
-		return nil, err
-	}
-
 	c := viper.New()
-	c.SetDefault("dsn", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable", u))
 	c.SetDefault("cookie_secret", "$GO_BOOTSTRAP_COOKIE_SECRET")
 	c.SetDefault("http_addr", ":8888")
 	c.SetDefault("http_cert_file", "")
