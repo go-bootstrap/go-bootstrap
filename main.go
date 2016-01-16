@@ -12,7 +12,20 @@ import (
 	"github.com/go-bootstrap/go-bootstrap/helpers"
 )
 
-func setupDatabase(fullpath string) {
+func setupMySQLDatabase(fullpath string) {
+	// go get github.com/mattes/migrate
+	log.Print("Running go get github.com/mattes/migrate...")
+	output, err := exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
+	helpers.ExitOnError(err, string(output))
+
+	// Bootstrap databases.
+	cmd := exec.Command("bash", "scripts/db-bootstrap")
+	cmd.Dir = fullpath
+	output, _ = cmd.CombinedOutput()
+	log.Print(string(output))
+}
+
+func setupPGDatabase(fullpath string) {
 	// go get github.com/rnubel/pgmgr
 	log.Print("Running go get github.com/rnubel/pgmgr...")
 	output, err := exec.Command("go", "get", "github.com/rnubel/pgmgr").CombinedOutput()
@@ -28,7 +41,7 @@ func setupDatabase(fullpath string) {
 func main() {
 	dirInput := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
 	gopathInput := flag.String("gopath", "", "Choose which $GOPATH to use")
-	templateInput := flag.String("template", "postgresql", "Choose project template. Available options: postgresql and core")
+	templateInput := flag.String("template", "postgresql", "Choose project template. Available options: postgresql, mysql and core")
 
 	flag.Parse()
 
@@ -101,16 +114,17 @@ func main() {
 	replacers["$GO_BOOTSTRAP_COOKIE_SECRET"] = helpers.RandString(16)
 	replacers["$GO_BOOTSTRAP_CURRENT_USER"] = helpers.GetCurrentUser()
 	replacers["$GO_BOOTSTRAP_PG_DSN"] = helpers.DefaultPGDSN(dbName)
-	replacers["$GO_BOOTSTRAP_ESCAPED_PG_DSN"] = helpers.BashEscape(helpers.DefaultPGDSN(dbName))
 	replacers["$GO_BOOTSTRAP_PG_TEST_DSN"] = helpers.DefaultPGDSN(testDbName)
-	replacers["$GO_BOOTSTRAP_ESCAPED_PG_TEST_DSN"] = helpers.BashEscape(helpers.DefaultPGDSN(testDbName))
 
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")
 
 	// 4. Setup and bootstrap databases.
-	if *templateInput != "core" {
-		setupDatabase(fullpath)
+	if *templateInput == "postgresql" {
+		setupPGDatabase(fullpath)
+	}
+	if *templateInput == "mysql" {
+		setupMySQLDatabase(fullpath)
 	}
 
 	// 5. Get all application dependencies for the first time.

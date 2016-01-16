@@ -3,7 +3,7 @@ package handlers
 
 import (
 	"errors"
-	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/dal"
+	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
