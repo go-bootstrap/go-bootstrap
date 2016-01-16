@@ -11,10 +11,10 @@ import (
 	"strconv"
 )
 
-func getCurrentUser(w http.ResponseWriter, r *http.Request) *dal.UserRow {
+func getCurrentUser(w http.ResponseWriter, r *http.Request) *models.UserRow {
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
-	return session.Values["user"].(*dal.UserRow)
+	return session.Values["user"].(*models.UserRow)
 }
 
 func getIdFromPath(w http.ResponseWriter, r *http.Request) (int64, error) {

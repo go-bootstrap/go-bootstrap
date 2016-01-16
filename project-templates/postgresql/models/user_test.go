@@ -1,4 +1,4 @@
-package dal
+package models
 
 import (
 	_ "github.com/lib/pq"

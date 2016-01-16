@@ -15,14 +15,14 @@ func GetHome(w http.ResponseWriter, r *http.Request) {
 	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
 
 	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
-	currentUser, ok := session.Values["user"].(*dal.UserRow)
+	currentUser, ok := session.Values["user"].(*models.UserRow)
 	if !ok {
 		http.Redirect(w, r, "/logout", 302)
 		return
 	}
 
 	data := struct {
-		CurrentUser *dal.UserRow
+		CurrentUser *models.UserRow
 	}{
 		currentUser,
 	}

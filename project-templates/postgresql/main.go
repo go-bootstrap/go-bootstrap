@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	gob.Register(&dal.UserRow{})
+	gob.Register(&models.UserRow{})
 }
 
 func newConfig() (*viper.Viper, error) {
