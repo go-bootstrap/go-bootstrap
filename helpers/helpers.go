@@ -31,23 +31,23 @@ func IsValidGoPath(gopath string) bool {
 	return false
 }
 
-// GetBlankDir returns the path to go-bootstrap's blank directory
-func GetBlankDir() (string, error) {
+// GetProjectTemplateDir returns the path to go-bootstrap's project-templates/ directory
+func GetProjectTemplateDir(projectTemplate string) (string, error) {
 	executableDir, err := osext.ExecutableFolder()
 	ExitOnError(err, "Cannot find go-bootstrap path")
 
-	ret := filepath.Join(executableDir, "blank")
+	ret := filepath.Join(executableDir, "project-templates", projectTemplate)
 	if _, err = os.Stat(ret); err == nil {
 		return ret, nil
 	}
 
 	base := filepath.Join("src", "github.com", "go-bootstrap", "go-bootstrap")
 
-	// if the blank project can't be found in the executable's dir,
+	// if the project directory can't be found in the executable's dir,
 	// try to locate the source code, it should be there.
 	// $gopath/bin/../src/github.com/go-bootstrap/go-bootstrap
 	srcDir := filepath.Join(filepath.Dir(executableDir), base)
-	ret = filepath.Join(srcDir, "blank")
+	ret = filepath.Join(srcDir, "project-templates", projectTemplate)
 	if _, err = os.Stat(ret); err == nil {
 		return ret, nil
 	}
@@ -55,13 +55,13 @@ func GetBlankDir() (string, error) {
 	// As the last resort search all gopaths.
 	// This is useful when executed with `go run`
 	for _, gopath := range GoPaths() {
-		ret = filepath.Join(filepath.Join(gopath, base), "blank")
+		ret = filepath.Join(filepath.Join(gopath, base), "project-templates", projectTemplate)
 		if _, err = os.Stat(ret); err == nil {
 			return ret, nil
 		}
 	}
 
-	return "", errors.New("Cannot find go-bootstrap's blank directory")
+	return "", errors.New(fmt.Sprintf("Unable to find go-bootstrap's %v directory", projectTemplate))
 }
 
 // BashEscape escapes various characters in bash environment.

@@ -12,9 +12,23 @@ import (
 	"github.com/go-bootstrap/go-bootstrap/helpers"
 )
 
+func setupDatabase(fullpath string) {
+	// go get github.com/rnubel/pgmgr
+	log.Print("Running go get github.com/rnubel/pgmgr...")
+	output, err := exec.Command("go", "get", "github.com/rnubel/pgmgr").CombinedOutput()
+	helpers.ExitOnError(err, string(output))
+
+	// Bootstrap databases.
+	cmd := exec.Command("bash", "scripts/db-bootstrap")
+	cmd.Dir = fullpath
+	output, _ = cmd.CombinedOutput()
+	log.Print(string(output))
+}
+
 func main() {
 	dirInput := flag.String("dir", "", "Project directory relative to $GOPATH/src/")
 	gopathInput := flag.String("gopath", "", "Choose which $GOPATH to use")
+	templateInput := flag.String("template", "postgresql", "Choose project template. Available options: postgresql and core")
 
 	flag.Parse()
 
@@ -55,7 +69,7 @@ func main() {
 	projectName := dirChunks[len(dirChunks)-1]
 	dbName := projectName
 	testDbName := projectName + "-test"
-	blankDir, err := helpers.GetBlankDir()
+	projectTemplateDir, err := helpers.GetProjectTemplateDir(*templateInput)
 	helpers.ExitOnError(err, "")
 
 	// 1. Create target directory
@@ -63,12 +77,12 @@ func main() {
 	err = os.MkdirAll(fullpath, 0755)
 	helpers.ExitOnError(err, "")
 
-	// 2. Copy everything under blank directory to target directory.
-	log.Print("Copying a blank project to " + fullpath + "...")
+	// 2. Copy everything under project template directory to target directory.
+	log.Print("Copying project template directory to " + fullpath + "...")
 	currDir, err := os.Getwd()
 	helpers.ExitOnError(err, "Can't get current path!")
 
-	err = os.Chdir(blankDir)
+	err = os.Chdir(projectTemplateDir)
 	helpers.ExitOnError(err, "")
 
 	output, err := exec.Command("cp", "-rf", ".", fullpath).CombinedOutput()
@@ -94,20 +108,14 @@ func main() {
 	err = helpers.RecursiveSearchReplaceFiles(fullpath, replacers)
 	helpers.ExitOnError(err, "")
 
-	// 4. go get github.com/rnubel/pgmgr
-	log.Print("Running go get github.com/rnubel/pgmgr...")
-	output, err = exec.Command("go", "get", "github.com/rnubel/pgmgr").CombinedOutput()
-	helpers.ExitOnError(err, string(output))
+	// 4. Setup and bootstrap databases.
+	if *templateInput != "core" {
+		setupDatabase(fullpath)
+	}
 
-	// 5. Bootstrap databases.
-	cmd := exec.Command("bash", "scripts/db-bootstrap")
-	cmd.Dir = fullpath
-	output, _ = cmd.CombinedOutput()
-	log.Print(string(output))
-
-	// 6. Get all application dependencies for the first time.
+	// 5. Get all application dependencies for the first time.
 	log.Print("Running go get ./...")
-	cmd = exec.Command("go", "get", "./...")
+	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	output, err = cmd.CombinedOutput()
 	helpers.ExitOnError(err, string(output))
