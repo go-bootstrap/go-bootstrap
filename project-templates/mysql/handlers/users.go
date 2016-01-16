@@ -33,7 +33,7 @@ func PostSignup(w http.ResponseWriter, r *http.Request) {
     password := r.FormValue("Password")
     passwordAgain := r.FormValue("PasswordAgain")
 
-    _, err := dal.NewUser(db).Signup(nil, email, password, passwordAgain)
+    _, err := models.NewUser(db).Signup(nil, email, password, passwordAgain)
     if err != nil {
         libhttp.HandleErrorJson(w, err)
         return
@@ -82,7 +82,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
     email := r.FormValue("Email")
     password := r.FormValue("Password")
 
-    u := dal.NewUser(db)
+    u := models.NewUser(db)
 
     user, err := u.GetUserByEmailAndPassword(nil, email, password)
     if err != nil {
@@ -139,7 +139,7 @@ func PutUsersID(w http.ResponseWriter, r *http.Request) {
 
     session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
-    currentUser := session.Values["user"].(*dal.UserRow)
+    currentUser := session.Values["user"].(*models.UserRow)
 
     if currentUser.ID != userId {
         err := errors.New("Modifying other user is not allowed.")
@@ -151,7 +151,7 @@ func PutUsersID(w http.ResponseWriter, r *http.Request) {
     password := r.FormValue("Password")
     passwordAgain := r.FormValue("PasswordAgain")
 
-    u := dal.NewUser(db)
+    u := models.NewUser(db)
 
     currentUser, err = u.UpdateEmailAndPasswordById(nil, currentUser.ID, email, password, passwordAgain)
     if err != nil {
