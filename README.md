@@ -49,7 +49,7 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 6. Model directory is located under `/models`.
 
-7. It does not use full blown ORM.
+7. It does not use a full blown ORM.
 
 8. Test database is automatically created under `$GO_BOOTSTRAP_PROJECT_NAME-test`.
 
