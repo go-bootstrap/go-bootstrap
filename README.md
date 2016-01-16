@@ -7,7 +7,7 @@ This is not a web framework. It generates a skeleton web project for you to kick
 
 Feel free to use or rip-out any of its parts.
 
-**NOTE:** I do not have a Windows machine to test this. At the moment, PostgreSQL template is not working on Windows due to reliance on Linux's system call to get current user.
+**NOTE:** Due to lack of Windows machine, at the moment, PostgreSQL template is not working on Windows due to reliance on Linux's system call to get current user.
 
 
 ## Prerequisites
