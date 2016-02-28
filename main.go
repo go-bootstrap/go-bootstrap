@@ -14,8 +14,8 @@ import (
 
 func setupMySQLDatabase(fullpath string) {
 	// go get github.com/mattes/migrate
-	log.Print("Running go get github.com/mattes/migrate...")
-	output, err := exec.Command("go", "get", "github.com/mattes/migrate").CombinedOutput()
+	log.Print("Running go get -u github.com/mattes/migrate...")
+	output, err := exec.Command("go", "get", "-u", "github.com/mattes/migrate").CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
 	// Bootstrap databases.
@@ -27,8 +27,8 @@ func setupMySQLDatabase(fullpath string) {
 
 func setupPGDatabase(fullpath string) {
 	// go get github.com/rnubel/pgmgr
-	log.Print("Running go get github.com/rnubel/pgmgr...")
-	output, err := exec.Command("go", "get", "github.com/rnubel/pgmgr").CombinedOutput()
+	log.Print("Running go get -u github.com/rnubel/pgmgr...")
+	output, err := exec.Command("go", "get", "-u", "github.com/rnubel/pgmgr").CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
 	// Bootstrap databases.
@@ -128,8 +128,8 @@ func main() {
 	}
 
 	// 5. Get all application dependencies for the first time.
-	log.Print("Running go get ./...")
-	cmd := exec.Command("go", "get", "./...")
+	log.Print("Running go get -u ./...")
+	cmd := exec.Command("go", "get", "-u", "./...")
 	cmd.Dir = fullpath
 	output, err = cmd.CombinedOutput()
 	helpers.ExitOnError(err, string(output))
@@ -141,7 +141,7 @@ func main() {
 	// Works only on git repo or bitbucket repo.
 	if repoIsGit || repoIsHg {
 		log.Print("Installing github.com/tools/godep...")
-		output, err := exec.Command("go", "get", "github.com/tools/godep").CombinedOutput()
+		output, err := exec.Command("go", "get", "-u", "github.com/tools/godep").CombinedOutput()
 		helpers.ExitOnError(err, string(output))
 
 		if repoIsGit {
