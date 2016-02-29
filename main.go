@@ -128,57 +128,16 @@ func main() {
 	}
 
 	// 5. Get all application dependencies for the first time.
-	log.Print("Running go get -u ./...")
-	cmd := exec.Command("go", "get", "-u", "./...")
+	log.Print("Running go get ./...")
+	cmd := exec.Command("go", "get", "./...")
 	cmd.Dir = fullpath
 	output, err = cmd.CombinedOutput()
 	helpers.ExitOnError(err, string(output))
 
-	repoIsGit := strings.HasPrefix(repoName, "git")
-	repoIsHg := strings.HasPrefix(repoName, "bitbucket")
-
-	// Generate Godeps directory.
-	// Works only on git repo or bitbucket repo.
-	if repoIsGit || repoIsHg {
-		log.Print("Installing github.com/tools/godep...")
-		output, err := exec.Command("go", "get", "-u", "github.com/tools/godep").CombinedOutput()
-		helpers.ExitOnError(err, string(output))
-
-		if repoIsGit {
-			log.Print("Running git init...")
-			cmd := exec.Command("git", "init")
-			cmd.Dir = fullpath
-			output, err = cmd.CombinedOutput()
-			helpers.ExitOnError(err, string(output))
-		}
-		if repoIsHg {
-			log.Print("Running hg init...")
-			cmd := exec.Command("hg", "init")
-			cmd.Dir = fullpath
-			output, _ = cmd.CombinedOutput()
-			log.Print(string(output))
-		}
-
-		// godep save ./...
-		log.Print("Running godep save ./...")
-		cmd = exec.Command("godep", "save", "./...")
-		cmd.Dir = fullpath
-		output, err = cmd.CombinedOutput()
-		helpers.ExitOnError(err, string(output))
-
-		// Run tests on newly generated app.
-		log.Print("Running godep go test ./...")
-		cmd = exec.Command("godep", "go", "test", "./...")
-		cmd.Dir = fullpath
-		output, _ = cmd.CombinedOutput()
-		log.Print(string(output))
-
-	} else {
-		// Run tests on newly generated app.
-		log.Print("Running go test ./...")
-		cmd = exec.Command("go", "test", "./...")
-		cmd.Dir = fullpath
-		output, _ = cmd.CombinedOutput()
-		log.Print(string(output))
-	}
+	// 6. Run tests on newly generated app.
+	log.Print("Running go test ./...")
+	cmd = exec.Command("go", "test", "./...")
+	cmd.Dir = fullpath
+	output, _ = cmd.CombinedOutput()
+	log.Print(string(output))
 }

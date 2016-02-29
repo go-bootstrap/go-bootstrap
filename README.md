@@ -37,7 +37,13 @@ they will be used to generate and bootstrap the database.
 
 This generator makes **A LOT** of decisions for you. Here's the list of things it uses for your project:
 
-1. PostgreSQL or MySQL are chosen for the database.
+1. There are 3 templates to choose from:
+
+    * Core: If you don't want a database.
+
+    * PostgreSQL.
+
+    * MySQL.
 
 2. bcrypt is chosen as the password hasher.
 
@@ -57,20 +63,18 @@ This generator makes **A LOT** of decisions for you. Here's the list of things i
 
 10. A minimal Vagrantfile is provided.
 
-11. [github.com/tools/godep](https://github.com/tools/godep) is chosen to manage dependencies.
+11. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
 
-12. [github.com/jmoiron/sqlx](https://github.com/jmoiron/sqlx) is chosen to connect to a database.
+12. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
 
-13. [github.com/gorilla](https://github.com/gorilla) is chosen for a lot of the HTTP plumbings.
+13. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
 
-14. [github.com/carbocation/interpose](https://github.com/carbocation/interpose) is chosen as the middleware library.
+14. [github.com/tylerb/graceful](https://github.com/tylerb/graceful) is chosen to enable graceful shutdown.
 
-15. [github.com/tylerb/graceful](https://github.com/tylerb/graceful) is chosen to enable graceful shutdown.
+15. [github.com/rnubel/pgmgr](https://github.com/rnubel/pgmgr) is chosen as the database migration and management tool for PostgreSQL.
 
-16. [github.com/rnubel/pgmgr](https://github.com/rnubel/pgmgr) is chosen as the database migration and management tool for PostgreSQL.
+16. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration and management tool for MySQL.
 
-17. [github.com/mattes/migrate](https://github.com/mattes/migrate) is chosen as the database migration and management tool for MySQL.
+17. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
 
-18. [github.com/Sirupsen/logrus](https://github.com/Sirupsen/logrus) is chosen as the logging library.
-
-19. [github.com/spf13/viper](https://github.com/spf13/viper) is chosen to manage application config.
+18. [github.com/spf13/viper](https://github.com/spf13/viper) is chosen to manage application config.
