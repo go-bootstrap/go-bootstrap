@@ -12,8 +12,8 @@ import (
 )
 
 func getCurrentUser(w http.ResponseWriter, r *http.Request) *models.UserRow {
-	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
+	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	return session.Values["user"].(*models.UserRow)
 }
 
