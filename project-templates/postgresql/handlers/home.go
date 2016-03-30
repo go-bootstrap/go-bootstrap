@@ -12,9 +12,9 @@ import (
 func GetHome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	cookieStore := context.Get(r, "cookieStore").(*sessions.CookieStore)
+	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
 
-	session, _ := cookieStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
+	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	currentUser, ok := session.Values["user"].(*models.UserRow)
 	if !ok {
 		http.Redirect(w, r, "/logout", 302)
