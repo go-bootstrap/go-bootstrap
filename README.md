@@ -22,7 +22,7 @@ Feel free to use or rip-out any of its parts.
 
 1. `go get github.com/go-bootstrap/go-bootstrap`
 
-2. `$GOPATH/bin/go-bootstrap -dir github.com/{git-user}/{project-name}`
+2. `$GOPATH/bin/go-bootstrap -dir github.com/{git-user}/{project-name} -template {core|postgresql|mysql}`
 
 3. Start using it: `cd $GOPATH/src/github.com/{git-user}/{project-name} && go run main.go`
 
