@@ -28,7 +28,7 @@ func New(config *viper.Viper) (*Application, error) {
 	app.config = config
 	app.dsn = dsn
 	app.db = db
-	app.cookieStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	app.sessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 
 	return app, nil
 }
@@ -38,13 +38,13 @@ type Application struct {
 	config      *viper.Viper
 	dsn         string
 	db          *sqlx.DB
-	cookieStore *sessions.CookieStore
+	sessionStore sessions.Store
 }
 
 func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
 	middle := interpose.New()
 	middle.Use(middlewares.SetDB(app.db))
-	middle.Use(middlewares.SetCookieStore(app.cookieStore))
+	middle.Use(middlewares.SetSessionStore(app.sessionStore))
 
 	middle.UseHandler(app.mux())
 

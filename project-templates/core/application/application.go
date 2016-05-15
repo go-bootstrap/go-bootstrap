@@ -17,7 +17,7 @@ func New(config *viper.Viper) (*Application, error) {
 
 	app := &Application{}
 	app.config = config
-	app.cookieStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	app.sessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 
 	return app, nil
 }
@@ -25,12 +25,12 @@ func New(config *viper.Viper) (*Application, error) {
 // Application is the application object that runs HTTP server.
 type Application struct {
 	config      *viper.Viper
-	cookieStore *sessions.CookieStore
+	sessionStore sessions.Store
 }
 
 func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
 	middle := interpose.New()
-	middle.Use(middlewares.SetCookieStore(app.cookieStore))
+	middle.Use(middlewares.SetSessionStore(app.sessionStore))
 
 	middle.UseHandler(app.mux())
 
