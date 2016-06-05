@@ -10,7 +10,11 @@ for dbname in "$GO_BOOTSTRAP_PROJECT_NAME" "$GO_BOOTSTRAP_PROJECT_NAME_test"; do
     dbname=${dbname//\-/_}
 
     echo "Creating database $dbname..."
-    mysqladmin create $dbname
+    if [ -z "$MYSQL_PWD" ]; then
+	    mysqladmin --user $MYSQL_USER create $dbname
+    else
+	    mysqladmin --user $MYSQL_USER --password $MYSQL_PWD create $dbname
+    fi
 
     MYSQL_DSN="mysql://$MYSQL_USER:$MYSQL_PWD@tcp($MYSQL_HOST:$MYSQL_TCP_PORT)/$dbname?parseTime=true"
     echo "Running migrations on '$MYSQL_DSN'..."
