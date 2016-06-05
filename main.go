@@ -20,6 +20,7 @@ func setupMySQLDatabase(fullpath string) {
 
 	// Bootstrap databases.
 	cmd := exec.Command("bash", "scripts/db-bootstrap")
+	cmd.Env = os.Environ()
 	cmd.Dir = fullpath
 	output, _ = cmd.CombinedOutput()
 	log.Print(string(output))
@@ -33,6 +34,7 @@ func setupPGDatabase(fullpath string) {
 
 	// Bootstrap databases.
 	cmd := exec.Command("bash", "scripts/db-bootstrap")
+	cmd.Env = os.Environ()
 	cmd.Dir = fullpath
 	output, _ = cmd.CombinedOutput()
 	log.Print(string(output))
