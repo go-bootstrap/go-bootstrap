@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/kardianos/osext"
+	"github.com/mitchellh/go-homedir"
 )
 
 // GetGoPaths returns the GOPATH as an array of paths
@@ -157,16 +158,20 @@ func ExitOnError(err error, msg string) {
 // GetCurrentUser returns the username of the current user.
 func GetCurrentUser() string {
 	currentUser, err := user.Current()
-
 	if err == nil {
 		return currentUser.Username
 	} else {
-		username := os.Getenv("USERNAME")
+		username, err := homedir.Dir()
+		if err == nil {
+			return username
+		} else {
+			osUsername := os.Getenv("USERNAME")
 
-		if username == "" {
-			log.Fatalln("Cannot determine current user's username")
+			if osUsername == "" {
+				log.Fatalln("Cannot determine current user's username")
+			}
+
+			return osUsername
 		}
-
-		return username
 	}
 }
