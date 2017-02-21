@@ -4,15 +4,15 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
+	"context"
 )
 
 func SetDB(db *sqlx.DB) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-			context.Set(req, "db", db)
+			req = req.WithContext(context.WithValue(req.Context(), "db", db))
 
 			next.ServeHTTP(res, req)
 		})
@@ -22,7 +22,7 @@ func SetDB(db *sqlx.DB) func(http.Handler) http.Handler {
 func SetSessionStore(sessionStore sessions.Store) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-			context.Set(req, "sessionStore", sessionStore)
+			req = req.WithContext(context.WithValue(req.Context(), "sessionStore", sessionStore))
 
 			next.ServeHTTP(res, req)
 		})
@@ -32,7 +32,7 @@ func SetSessionStore(sessionStore sessions.Store) func(http.Handler) http.Handle
 // MustLogin is a middleware that checks existence of current user.
 func MustLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		sessionStore := context.Get(req, "sessionStore").(sessions.Store)
+		sessionStore := req.Context().Value( "sessionStore").(sessions.Store)
 		session, _ := sessionStore.Get(req, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 		userRowInterface := session.Values["user"]
 
