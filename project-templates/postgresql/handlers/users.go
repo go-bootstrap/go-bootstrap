@@ -4,7 +4,6 @@ import (
 	"errors"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/models"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/libhttp"
-	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
 	"html/template"
@@ -27,7 +26,7 @@ func GetSignup(w http.ResponseWriter, r *http.Request) {
 func PostSignup(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	db := context.Get(r, "db").(*sqlx.DB)
+	db := r.Context().Value("db").(*sqlx.DB)
 
 	email := r.FormValue("Email")
 	password := r.FormValue("Password")
@@ -59,7 +58,7 @@ func GetLoginWithoutSession(w http.ResponseWriter, r *http.Request) {
 func GetLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	sessionStore := r.Context().Value("sessionStore").(sessions.Store)
 
 	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
@@ -76,8 +75,8 @@ func GetLogin(w http.ResponseWriter, r *http.Request) {
 func PostLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	db := context.Get(r, "db").(*sqlx.DB)
-	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	db := r.Context().Value( "db").(*sqlx.DB)
+	sessionStore := r.Context().Value( "sessionStore").(sessions.Store)
 
 	email := r.FormValue("Email")
 	password := r.FormValue("Password")
@@ -105,7 +104,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 func GetLogout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	sessionStore := r.Context().Value("sessionStore").(sessions.Store)
 
 	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 
@@ -133,9 +132,9 @@ func PutUsersID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := context.Get(r, "db").(*sqlx.DB)
+	db := r.Context().Value( "db").(*sqlx.DB)
 
-	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	sessionStore := r.Context().Value( "sessionStore").(sessions.Store)
 
 	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 

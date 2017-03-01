@@ -4,7 +4,6 @@ package handlers
 import (
 	"errors"
 	"$GO_BOOTSTRAP_REPO_NAME/$GO_BOOTSTRAP_REPO_USER/$GO_BOOTSTRAP_PROJECT_NAME/models"
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"net/http"
@@ -12,7 +11,7 @@ import (
 )
 
 func getCurrentUser(w http.ResponseWriter, r *http.Request) *models.UserRow {
-	sessionStore := context.Get(r, "sessionStore").(sessions.Store)
+	sessionStore := r.Context().Value( "sessionStore").(sessions.Store)
 	session, _ := sessionStore.Get(r, "$GO_BOOTSTRAP_PROJECT_NAME-session")
 	return session.Values["user"].(*models.UserRow)
 }
