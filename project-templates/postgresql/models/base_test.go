@@ -18,7 +18,8 @@ func newDbForTest(t *testing.T) *sqlx.DB {
 	var err error
 	pguser, _, pghost, pgport, pgsslmode := os.Getenv("PGUSER"), os.Getenv("PGPASSWORD"), os.Getenv("PGHOST"), os.Getenv("PGPORT"), os.Getenv("PGSSLMODE")
 	if pguser == ""{
-		pguser, err = libunix.CurrentUser()
+		u, err := user.Current()
+		pguser = u.Username
 		if err != nil {
 			t.Fatalf("Getting current user should never fail. Error: %v", err)
 		}
