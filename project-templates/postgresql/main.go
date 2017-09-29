@@ -6,6 +6,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/tylerb/graceful"
+	"os/user"
 	"net/http"
 	"time"
 
@@ -19,13 +20,13 @@ func init() {
 }
 
 func newConfig() (*viper.Viper, error) {
-	u, err := libunix.CurrentUser()
+	u, err := user.Current()
 	if err != nil {
 		return nil, err
 	}
 
 	c := viper.New()
-	c.SetDefault("dsn", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable", u))
+	c.SetDefault("dsn", fmt.Sprintf("postgres://%v@localhost:5432/$GO_BOOTSTRAP_PROJECT_NAME?sslmode=disable", u.Username))
 	c.SetDefault("cookie_secret", "$GO_BOOTSTRAP_COOKIE_SECRET")
 	c.SetDefault("http_addr", ":8888")
 	c.SetDefault("http_cert_file", "")
