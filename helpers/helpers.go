@@ -17,7 +17,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-// GetGoPaths returns the GOPATH as an array of paths
+// GoPaths returns the GOPATH as an array of paths
 func GoPaths() []string {
 	return strings.Split(os.Getenv("GOPATH"), ":")
 }

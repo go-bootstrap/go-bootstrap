@@ -63,7 +63,7 @@ func (u *User) GetByEmail(tx *sqlx.Tx, email string) (*UserRow, error) {
 	return user, err
 }
 
-// GetByEmail returns record by email but checks password first.
+// GetUserByEmailAndPassword returns record by email but checks password first.
 func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*UserRow, error) {
 	user, err := u.GetByEmail(tx, email)
 	if err != nil {
