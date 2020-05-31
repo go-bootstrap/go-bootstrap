@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/go-bootstrap/go-bootstrap/helpers"
@@ -100,7 +101,14 @@ func main() {
 	err = os.Chdir(projectTemplateDir)
 	helpers.ExitOnError(err, "")
 
-	output, err := exec.Command("cp", "-rf", ".", fullpath).CombinedOutput()
+	var output []byte
+	// 2.1 Detect OS and run appropriate copy command
+	if runtime.GOOS == "windows" {
+		output, err = exec.Command("xcopy", ".", strings.Replace(fullpath, "/", "\\", 100), "/E").CombinedOutput()
+	} else {
+		output, err = exec.Command("cp", "-rf", ".", fullpath).CombinedOutput()
+	}
+
 	helpers.ExitOnError(err, string(output))
 
 	err = os.Chdir(currDir)
