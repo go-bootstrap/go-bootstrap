@@ -18,5 +18,5 @@ for dbname in "$GO_BOOTSTRAP_PROJECT_NAME" "$GO_BOOTSTRAP_PROJECT_NAME_test"; do
 
     MYSQL_DSN="mysql://$MYSQL_USER:$MYSQL_PWD@tcp($MYSQL_HOST:$MYSQL_TCP_PORT)/$dbname?parseTime=true"
     echo "Running migrations on '$MYSQL_DSN'..."
-    migrate -url "$MYSQL_DSN" -path $SCRIPT_DIR/../migrations up
+    migrate -database "$MYSQL_DSN" -path $SCRIPT_DIR/../migrations up
 done
